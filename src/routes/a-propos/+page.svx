@@ -1,0 +1,8 @@
+<script lang="ts">
+    // @ts-expect-error
+    import About from "./About.svx";
+</script>
+
+<div class="container mx-auto prose">
+    <About />
+</div>

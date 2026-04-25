@@ -19,7 +19,7 @@
                 <a
                     class="link link-primary"
                     href={`/etablissements/${formation.etablissementUai}`}
-                    >Fiche ExploraSup de l'établissement</a
+                    >Fiche SupRadar de l'établissement</a
                 >
             </li>
             <li class="list-row">

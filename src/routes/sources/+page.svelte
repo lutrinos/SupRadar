@@ -1,7 +1,4 @@
 <script lang="ts">
-    // @ts-expect-error
-    import Changelog from "../../../CHANGELOG.md";
-
     const data = [
         [
             "Parcoursup 2025",
@@ -26,13 +23,40 @@
         [
             "Onisep - Idéo-Actions de formation initiale-Univers enseignement supérieur (Licence ODBL)",
             "https://opendata.onisep.fr/data/605344579a7d7/2-ideo-actions-de-formation-initiale-univers-enseignement-superieur.htm?tab=table_696f661015211",
-            "25 avril 2026",
-        ],
+            "25 avril 2026"
+        ]
     ];
 </script>
 
-<div class="container mx-auto">
-    <div class="prose">
-        <Changelog />
+<div class="">
+    <div class="container mx-auto">
+        <div class="prose mb-4">
+            <h1>Sources</h1>
+        </div>
+
+        <table class="table table-zebra mb-12">
+            <thead>
+                <tr>
+                    <th>Jeu de données</th>
+                    <th>Source</th>
+                    <th>Date de téléchargement</th>
+                </tr>
+            </thead>
+            <tbody>
+                {#each data as row, i (i)}
+                    <tr>
+                        <td>{row[0]}</td>
+                        <td
+                            ><a
+                                target="_blank"
+                                href={row[1]}
+                                class="link link-primary">{row[1]}</a
+                            ></td
+                        >
+                        <td>{row[2]}</td>
+                    </tr>
+                {/each}
+            </tbody>
+        </table>
     </div>
 </div>

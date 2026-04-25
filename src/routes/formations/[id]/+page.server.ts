@@ -20,7 +20,7 @@ export const load = async ({ params }) => {
     });
 
     if (formation?.statistiques) {
-        formation.statistiques.sort((a, b) => b.session - a.session);
+        formation.statistiques.sort((a, b) => a.session - b.session);
     }
 
 	return {

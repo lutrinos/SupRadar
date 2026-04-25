@@ -1,0 +1,3 @@
+# Contact
+
+Si vous constatez une erreur quelconque, vous pouvez ouvrir une issue sur [la page GitHub](https://github.com/lutrinos/SupRadar/issues) du site, ou bien me contacter directement par mail à l'adresse nathanti.dev@gmail.com.

@@ -1,0 +1,17 @@
+
+# À propos
+
+Explorez les différentes formations présentes sur [Parcoursup](https://www.parcoursup.gouv.fr/) et accédez à leurs statistiques sur les dernières années.
+
+SupRadar rassemble diverses données issues du [ministère de l'enseignement supérieur](https://data.enseignementsup-recherche.gouv.fr/) et de l'[Onisep](https://opendata.onisep.fr/) afin de donner un meilleur aperçu des formations proposées par les établissements sur Parcoursup.
+
+Ce projet s'inspire de l'excellent [SupTracker](https://www.suptracker.org/), en se restreignant à Parcoursup dans le but d'aggréger plus d'informations sur les filières proposées et les diplômes délivrés par les établissements.
+
+
+Il a pour ambition de proposer une vue d'ensemble des formations proposées, en proposant dès que possible des liens vers les sites de Parcoursup et de l'Onisep qui seuls font foi.
+
+**Cet outil est neutre ne fournit aucun conseil ou avis sur le projet d'orientation des candidats.**
+
+Dans un souci de transparence, l'intégralité du code de ce site est [public](https://github.com/lutrinos/SupRadar), et les sources des données utilisées sont répertoriées [sur cette page](/sources) avec leur dernière date d'accès.
+
+À tou(te)s les futur(e)s candidat(e)s, bon courage !

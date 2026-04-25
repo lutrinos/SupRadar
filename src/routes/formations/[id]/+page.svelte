@@ -9,7 +9,7 @@
 
 	let { data } = $props();
 	let current = $derived(
-		data.formation?.statistiques.sort((v: any) => v.session).at(0),
+		data.formation?.statistiques.at(-1),
 	);
 </script>
 

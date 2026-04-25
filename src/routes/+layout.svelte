@@ -35,7 +35,7 @@
 					>
 				</label>
 				<a href="/" class="text-2xl font-bold"
-					>Explora<span class="text-accent">Sup</span></a
+					>Sup<span class="text-accent">Radar</span></a
 				>
 			</div>
 			<div class="navbar-center hidden lg:flex">
@@ -96,15 +96,20 @@
 			<a href="/a-propos" class="link link-hover">À propos</a>
 			<a href="/contact" class="link link-hover">Contact</a>
 			<a
-				href="https://github.com/lutrinos/ExploraSup"
+				target="_blank"
+				href="https://github.com/lutrinos/SupRadar"
 				class="link link-hover">GitHub</a
+			>
+			<a
+				href="/sources"
+				class="link link-hover">Sources</a
 			>
 			<a href="/changelog" class="link link-hover">Changelog</a>
 		</nav>
 
 		<aside class="p-8">
 			<div class="text-4xl font-bold">
-				Explora<span class="text-accent">Sup</span>
+				Sup<span class="text-accent">Radar</span>
 			</div>
 		</aside>
 

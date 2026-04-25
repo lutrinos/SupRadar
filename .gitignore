@@ -27,3 +27,6 @@ data/source
 
 # VS Code
 .vscode
+
+# Bun
+bun.lock

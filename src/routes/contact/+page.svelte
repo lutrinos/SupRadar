@@ -1,3 +1,8 @@
-<h1>Contact !</h1>
+<script lang="ts">
+    // @ts-expect-error
+    import Contact from "./Contact.svx"
+</script>
 
-Contacter <a class="link link-primary" href="mailto:mail@example.com">mail@example.com</a>
+<div class="prose container mx-auto">
+    <Contact />
+</div>

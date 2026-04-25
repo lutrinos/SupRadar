@@ -4,7 +4,7 @@
 <div class="hero p-32 rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-400">
 	<div class="hero-content text-center text-white">
 		<div class="max-w-2xl">
-			<h1 class="text-5xl md:text-6xl font-bold mb-6">ExploraSup</h1>
+			<h1 class="text-5xl md:text-6xl font-bold mb-6">SupRadar</h1>
 			<p class="text-lg md:text-xl mb-8 opacity-90">
 				Explorateur de formations sur Parcoursup
 			</p>
