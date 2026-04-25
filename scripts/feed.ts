@@ -88,7 +88,7 @@ class Intermediary<T> {
             obj[value[key]] = value;
         });
 
-        // @ts-expect-error
+        // @ts-ignore
         await Bun.write(path, JSON.stringify(obj));
     }
 
@@ -211,7 +211,7 @@ const callback2025_2024_2023_2022 = (data: LigneCSV, session: number) => {
         detailForma: ds(data.detail_forma, "Aucun détail"),
         detailForma2: ds(data.detail_forma2, "Aucun détail"),
 
-        recherche: [data.cod_uai, data.LIB_COMP_VOE_INS, data.Fili, data.form_lib_voe_acc, data.fil_lib_voe_acc, data.G_EA_LIB_VX, data.ville_etab, data.acad_mies, data.region_etab_aff, data.dep_lib].filter((i) => !!i).join(' ')
+        recherche: [data.cod_uai, data.LIB_COMP_VOE_INS, data.Fili, data.form_lib_voe_acc, data.fil_lib_voe_acc, data.G_EA_LIB_VX, data.ville_etab, data.acad_mies, data.region_etab_aff, data.dep_lib].filter((i) => !!i).join(' ').normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase()
     });
 
     stats.push({
@@ -233,13 +233,13 @@ const callback2025_2024_2023_2022 = (data: LigneCSV, session: number) => {
 
 
 log('debug', 'Données 2022');
-await parseCSV(2022, callback2025_2024_2023_2022);
+// await parseCSV(2022, callback2025_2024_2023_2022);
 
 log('debug', 'Données 2023');
-await parseCSV(2023, callback2025_2024_2023_2022);
+// await parseCSV(2023, callback2025_2024_2023_2022);
 
 log('debug', 'Données 2024');
-await parseCSV(2024, callback2025_2024_2023_2022);
+// await parseCSV(2024, callback2025_2024_2023_2022);
 
 // On met à jour quelques données pour n'avoir que les dernières
 tables.etablissements.data.forEach((v) => {
@@ -249,124 +249,130 @@ tables.etablissements.data.forEach((v) => {
 log('debug', 'Données 2025');
 await parseCSV(2025, callback2025_2024_2023_2022);
 
-log('debug', 'Sauvegarde locale');
-await tables.departements.save("./src/lib/data/departements.json", "code");
-await tables.regions.save("./src/lib/data/regions.json", "code");
-await tables.academies.save("./src/lib/data/academies.json", "code");
-await tables.statuts.save("./src/lib/data/statuts.json", "code");
 
-await tables.filiere1.save("./src/lib/data/filiere1.json", "code");
-await tables.filiere2.save("./src/lib/data/filiere2.json", "code");
-await tables.filiere3.save("./src/lib/data/filiere3.json", "code");
+log('debug', 'Sauvegarde locale');
+// await tables.departements.save("./src/lib/data/departements.json", "code");
+// await tables.regions.save("./src/lib/data/regions.json", "code");
+// await tables.academies.save("./src/lib/data/academies.json", "code");
+// await tables.statuts.save("./src/lib/data/statuts.json", "code");
+
+// await tables.filiere1.save("./src/lib/data/filiere1.json", "code");
+// await tables.filiere2.save("./src/lib/data/filiere2.json", "code");
+// await tables.filiere3.save("./src/lib/data/filiere3.json", "code");
 
 log('debug', 'Sauvegarde SQL');
 // On insère les départements
-await tables.departements.chunk(1000, (data) => db.insert(departements).values(data).onConflictDoUpdate({
-    target: departements.code,
-    set: {
-        nom: sql`excluded.nom`
-    }
-}));
+// await tables.departements.chunk(1000, (data) => db.insert(departements).values(data).onConflictDoUpdate({
+//     target: departements.code,
+//     set: {
+//         nom: sql`excluded.nom`
+//     }
+// }));
 
 log('debug', 'Départements insérés');
 
 // On insère les statuts
-await tables.statuts.chunk(1000, (data) => db.insert(statuts).values(data).onConflictDoUpdate({
-    target: statuts.code,
-    set: {
-        nom: sql`excluded.nom`
-    }
-}));
+// await tables.statuts.chunk(1000, (data) => db.insert(statuts).values(data).onConflictDoUpdate({
+//     target: statuts.code,
+//     set: {
+//         nom: sql`excluded.nom`
+//     }
+// }));
 
 log('debug', 'Status insérés');
 
 // On insère les régions
-await tables.regions.chunk(1000, (data) => db.insert(regions).values(data).onConflictDoUpdate({
-    target: regions.code,
-    set: {
-        nom: sql`excluded.nom`
-    }
-}));
+// await tables.regions.chunk(1000, (data) => db.insert(regions).values(data).onConflictDoUpdate({
+//     target: regions.code,
+//     set: {
+//         nom: sql`excluded.nom`
+//     }
+// }));
 
 log('debug', 'Régions insérées');
 
 // On insère les académies
-await tables.academies.chunk(1000, (data) => db.insert(academies).values(data).onConflictDoUpdate({
-    target: academies.code,
-    set: {
-        nom: sql`excluded.nom`
-    }
-}));
+// await tables.academies.chunk(1000, (data) => db.insert(academies).values(data).onConflictDoUpdate({
+//     target: academies.code,
+//     set: {
+//         nom: sql`excluded.nom`
+//     }
+// }));
 
 log('debug', 'Académies insérées');
 
 // On insère les filières
-await tables.filiere1.chunk(1000, (data) => db.insert(filiere1).values(data).onConflictDoUpdate({
-    target: filiere1.code,
-    set: {
-        nom: sql`excluded.nom`,
-        slug: sql`excluded.slug`
-    }
-}))
+// await tables.filiere1.chunk(1000, (data) => db.insert(filiere1).values(data).onConflictDoUpdate({
+//     target: filiere1.code,
+//     set: {
+//         nom: sql`excluded.nom`,
+//         slug: sql`excluded.slug`
+//     }
+// }))
 
-await tables.filiere2.chunk(1000, (data) => db.insert(filiere2).values(data).onConflictDoUpdate({
-    target: filiere2.code,
-    set: {
-        nom: sql`excluded.nom`,
-        slug: sql`excluded.slug`
-    }
-}))
+// await tables.filiere2.chunk(1000, (data) => db.insert(filiere2).values(data).onConflictDoUpdate({
+//     target: filiere2.code,
+//     set: {
+//         nom: sql`excluded.nom`,
+//         slug: sql`excluded.slug`
+//     }
+// }))
 
-await tables.filiere3.chunk(1000, (data) => db.insert(filiere3).values(data).onConflictDoUpdate({
-    target: filiere3.code,
-    set: {
-        nom: sql`excluded.nom`,
-        slug: sql`excluded.slug`
-    }
-}))
+// await tables.filiere3.chunk(1000, (data) => db.insert(filiere3).values(data).onConflictDoUpdate({
+//     target: filiere3.code,
+//     set: {
+//         nom: sql`excluded.nom`,
+//         slug: sql`excluded.slug`
+//     }
+// }))
 
 log('debug', 'Filières insérées');
 
 // On insère les établissements
-await tables.etablissements.chunk(500, (data) => db.insert(etablissements).values(data).onConflictDoUpdate({
-    target: etablissements.uai,
-    set: {
-        regionCode: sql`excluded.region_code`,
-        academieCode: sql`excluded.academie_code`,
-        departementCode: sql`excluded.departement_code`,
-        statutCode: sql`excluded.statut_code`,
+// await tables.etablissements.chunk(500, (data) => db.insert(etablissements).values(data).onConflictDoUpdate({
+//     target: etablissements.uai,
+//     set: {
+//         regionCode: sql`excluded.region_code`,
+//         academieCode: sql`excluded.academie_code`,
+//         departementCode: sql`excluded.departement_code`,
+//         statutCode: sql`excluded.statut_code`,
 
-        longitude: sql`excluded.longitude`,
-        latitude: sql`excluded.latitude`
-    }
-}));
+//         longitude: sql`excluded.longitude`,
+//         latitude: sql`excluded.latitude`
+//     }
+// }));
 
 log('debug', 'Établissements insérés');
 
 // On insère les formations
-await tables.formations.chunk(500, (data) => db.insert(formations).values(data).onConflictDoUpdate({
-    target: formations.id,
-    set: {
-        etablissementUai: sql`excluded.etablissement_uai`,
-        nom: sql`excluded.nom`,
+// await tables.formations.chunk(500, (data) => db.insert(formations).values(data).onConflictDoUpdate({
+//     target: formations.id,
+//     set: {
+//         etablissementUai: sql`excluded.etablissement_uai`,
+//         nom: sql`excluded.nom`,
 
-        selective: sql`excluded.selective`,
-        capacite: sql`excluded.capacite`,
+//         selective: sql`excluded.selective`,
+//         capacite: sql`excluded.capacite`,
 
-        filiere1: sql`excluded.filiere1`,
-        filiere2: sql`excluded.filiere2`,
-        filiere3: sql`excluded.filiere3`,
+//         filiere1: sql`excluded.filiere1`,
+//         filiere2: sql`excluded.filiere2`,
+//         filiere3: sql`excluded.filiere3`,
 
-        detailForma: sql`excluded.detail_forma`,
-        detailForma2: sql`excluded.detail_forma2`,
+//         detailForma: sql`excluded.detail_forma`,
+//         detailForma2: sql`excluded.detail_forma2`,
 
-        recherche: sql`excluded.recherche`
-    }
-}));
+//         recherche: sql`excluded.recherche`
+//     }
+// }));
 
 log('debug', 'Formations insérées');
 
 // On insère les statistiques
-await chunk(stats, 500, (data) => db.insert(statistiques).values(data).onConflictDoNothing());
+await chunk(stats, 500, (data) => db.insert(statistiques).values(data).onConflictDoUpdate({
+    target: [statistiques.formationId, statistiques.session],
+    set: {
+        stats: sql`excluded.stats`
+    }
+}));
 
 log('debug', 'Statistiques insérées');

@@ -1,4 +1,4 @@
-import { boolean, doublePrecision, integer, json, pgTable, primaryKey, text } from "drizzle-orm/pg-core";
+import { boolean, doublePrecision, index, integer, json, pgTable, primaryKey, text } from "drizzle-orm/pg-core";
 import { type InferSelectModel, relations } from 'drizzle-orm';
 
 export const departements = pgTable('departements', {
@@ -71,7 +71,12 @@ export const formations = pgTable('formations', {
 	detailForma2: text().notNull(),
 
 	recherche: text().notNull(),
-});
+}, (table) => [
+	index("formations_search_idx").using(
+		"gist",
+		table.recherche.op("gist_trgm_ops")
+	)
+]);
 
 export const statistiques = pgTable('statistiques', {
 	session: integer().notNull(),// session

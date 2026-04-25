@@ -1,28 +1,32 @@
 <script lang="ts">
+	import { page } from "$app/state";
+	import { navigating } from "$app/state";
+	import { goto } from "$app/navigation";
 	import Selective from "$components/Selective.svelte";
-	import { getFormations } from "./data.remote";
 
-	let query = $state("");
-	let loading = $state(false);
-	let thresholdQuery = $state("");
-
-	const formations = $derived(getFormations(thresholdQuery));
+	let { data } = $props();
+	let query = $state(page.url.searchParams.get("q") ?? "");
+	let p = $state(parseInt(page.url.searchParams.get("p") ?? "0") || 0);
 
 	$effect(() => {
 		const q = query;
-		loading = true;
 
-		const i = setTimeout(() => {
-			loading = false;
-			thresholdQuery = q;
+		const timer = setTimeout(() => {
+			const url = new URL(page.url);
+			if (q) url.searchParams.set("q", q);
+			else url.searchParams.delete("q");
+
+			goto(url, { replaceState: true, keepFocus: true, noScroll: true });
 		}, 500);
 
-		return () => clearTimeout(i);
+		return () => clearTimeout(timer);
 	});
+
+	$inspect(p).with(console.log)
 </script>
 
 <div class="min-h-screen bg-base-100 py-12">
-	<div class="container mx-auto px-4">
+	<div class="container">
 		<!-- Header -->
 		<div class="mb-12">
 			<h1 class="text-4xl md:text-5xl font-bold mb-4">Formations</h1>
@@ -50,24 +54,14 @@
 		</div>
 
 		<!-- Formations Grid -->
-		{#if formations.loading}
+		{#if navigating && navigating.to?.url.searchParams.get("q") !== navigating.from?.url.searchParams.get("q")}
 			<div class="text-center py-32">
 				<span class="loading loading-spinner loading-xl text-primary"
 				></span>
 			</div>
-		{:else if formations.error}
-			<div class="text-center py-32">
-				<span class="text-sm text-gray-700 italic"
-					>Une erreur s'est produite.</span
-				>
-			</div>
-		{:else if !formations.current || formations.current.length === 0}
-			<div class="text-center py-32">
-				<span class="text-sm text-gray-700 italic">Aucun résultat</span>
-			</div>
 		{:else}
 			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-				{#each formations.current as formation (formation.id)}
+				{#each data.formations as formation (formation.id)}
 					<a
 						href={`/formations/${formation.id}`}
 						class="card bg-white shadow-lg hover:shadow-xl transition"
@@ -87,6 +81,14 @@
 					</a>
 				{/each}
 			</div>
+
+			<!--<div class="py-12 flex justify-center">
+				<div class="join">
+					{#each {length: Math.ceil((data.total || 0) / 20)} as _, i }
+						<a href={`/formations?q=${query}&p=${i}`} class={["join-item btn", i === p ? "btn-active" : ""]}>{i + 1}</a>
+					{/each}
+				</div>
+			</div>-->
 		{/if}
 	</div>
 </div>

@@ -30,37 +30,25 @@
 				</thead>
 				<tbody>
 					<tr class="hover:bg-emerald-25 transition">
-						<td class="font-medium">0945691B</td>
-						<td class="hidden sm:table-cell">Lycée Victor Grignard</td>
+						<td class="font-medium">0691774D</td>
+						<td class="hidden sm:table-cell">Université Claude Bernard</td>
 						<td class="hidden md:table-cell">
-							<span class="badge bg-emerald-100 text-emerald-800">Lycée</span>
+							<span class="badge bg-emerald-100 text-emerald-800">Université</span>
 						</td>
 						<td>
-							<a href="/etablissement/0945691B" class="btn btn-sm bg-emerald-500 hover:bg-emerald-600 text-white border-0">
+							<a href="/etablissements/0691774D" class="btn btn-sm bg-emerald-500 hover:bg-emerald-600 text-white border-0">
 								Voir
 							</a>
 						</td>
 					</tr>
 					<tr class="hover:bg-emerald-25 transition">
-						<td class="font-medium">0751234A</td>
-						<td class="hidden sm:table-cell">Lycée Henri IV</td>
+						<td class="font-medium">	0690026D</td>
+						<td class="hidden sm:table-cell">Lycée du Parc</td>
 						<td class="hidden md:table-cell">
 							<span class="badge bg-emerald-100 text-emerald-800">Lycée</span>
 						</td>
 						<td>
-							<a href="/etablissement/0751234A" class="btn btn-sm bg-emerald-500 hover:bg-emerald-600 text-white border-0">
-								Voir
-							</a>
-						</td>
-					</tr>
-					<tr class="hover:bg-emerald-25 transition">
-						<td class="font-medium">0692013H</td>
-						<td class="hidden sm:table-cell">Collège Jean Moulin</td>
-						<td class="hidden md:table-cell">
-							<span class="badge bg-emerald-100 text-emerald-800">Collège</span>
-						</td>
-						<td>
-							<a href="/etablissement/0692013H" class="btn btn-sm bg-emerald-500 hover:bg-emerald-600 text-white border-0">
+							<a href="/etablissements/0690026D" class="btn btn-sm bg-emerald-500 hover:bg-emerald-600 text-white border-0">
 								Voir
 							</a>
 						</td>
@@ -69,7 +57,7 @@
 			</table>
 		</div>
 
-		<!-- Empty State (if no results) -->
+		<!-- Empty State (if no results) 
 		<div class="flex justify-center items-center py-12">
 			<div class="text-center max-w-md">
 				<svg
@@ -88,6 +76,6 @@
 				</svg>
 				<p class="text-gray-500">Aucun établissement trouvé</p>
 			</div>
-		</div>
+		</div>-->
 	</div>
 </div>
