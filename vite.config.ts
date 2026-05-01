@@ -5,7 +5,7 @@ import { adapter, analyzer } from 'vite-bundle-analyzer';
 
 export default defineConfig({
     plugins: [
-        adapter(analyzer()),
+        //adapter(analyzer()),
         tailwindcss(),
         sveltekit()
     ],
