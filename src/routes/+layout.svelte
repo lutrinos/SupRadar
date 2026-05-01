@@ -10,7 +10,7 @@
 <svelte:head><link rel="icon" href={favicon} /></svelte:head>
 
 <!-- Navbar -->
-<div class="flex flex-col p-8 min-h-screen">
+<div class="flex flex-col p-2 lg:p-8 min-h-screen">
 	<div class="max-lg:collapse w-full">
 		<input id="navbar-1-toggle" class="peer hidden" type="checkbox" />
 		<label
@@ -46,7 +46,8 @@
 					<li><a href="/filieres">Filières</a></li>
 				</ul>
 			</div>
-			<div class="navbar-end">
+			
+			<div class="navbar-end hidden lg:flex">
 				<label class="input input-bordered">
 					<svg
 						class="h-[1em] opacity-50"
@@ -92,7 +93,7 @@
 	<footer
 		class="footer footer-horizontal footer-center text-base-content rounded p-10"
 	>
-		<nav class="grid grid-flow-col gap-4">
+		<nav class="grid sm:grid-flow-col gap-4">
 			<a href="/a-propos" class="link link-hover">À propos</a>
 			<a href="/contact" class="link link-hover">Contact</a>
 			<a

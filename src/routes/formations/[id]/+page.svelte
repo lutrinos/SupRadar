@@ -19,7 +19,7 @@
 {#if !data.formation}
 	<div>Formation introuvable</div>
 {:else}
-	<div class="min-h-screen bg-base-200 rounded-xl p-4">
+	<div class="min-h-screen bg-base-200 rounded-selector p-2 lg:p-4">
 		<div class="container mx-auto">
 			<BreadCrumbs formation={data.formation} />
 

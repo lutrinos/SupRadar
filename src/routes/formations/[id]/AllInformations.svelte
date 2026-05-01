@@ -5,7 +5,7 @@
     let { formation } = $props();
 </script>
 
-<div class="card card-border bg-base-100 mb-8">
+<div class="card card-border bg-base-100">
     <div class="card-body">
         <h2 class="card-title">Toutes les informations</h2>
 
