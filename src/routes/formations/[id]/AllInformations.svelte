@@ -5,7 +5,7 @@
     let { formation } = $props();
 </script>
 
-<div class="card bg-white shadow mb-8 border border-gray-200">
+<div class="card card-border bg-base-100 mb-8">
     <div class="card-body">
         <h2 class="card-title">Toutes les informations</h2>
 
@@ -38,7 +38,7 @@
                     </tr>
                     <tr>
                         <td>Filière de formation détaillée bis</td>
-                        <td>{getFiliere(2, formation.filiere3).nom}</td>
+                        <td>{getFiliere(3, formation.filiere3).nom}</td>
                     </tr>
                     <tr>
                         <td>Filière de formation très détaillée</td>

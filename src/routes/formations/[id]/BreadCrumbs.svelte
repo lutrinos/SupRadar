@@ -7,6 +7,9 @@
 <div class="breadcrumbs">
     <ul>
         <li>
+            <a href="/filieres" class="link link-hover">Filières</a>
+        </li>
+        <li>
             <a
                 href={`/filieres/${getFiliere(1, formation.filiere1).slug}`}
                 class="link link-hover"
@@ -22,7 +25,7 @@
         </li>
         <li>
             <a
-                href={`/filieres/${getFiliere(1, formation.filiere1).slug}/${getFiliere(2, formation.filiere2).slug}/${getFiliere(2, formation.filiere3).slug}`}
+                href={`/filieres/${getFiliere(1, formation.filiere1).slug}/${getFiliere(2, formation.filiere2).slug}/${getFiliere(3, formation.filiere3).slug}`}
                 class="link link-hover"
                 >{getFiliere(3, formation.filiere3).nom}</a
             >

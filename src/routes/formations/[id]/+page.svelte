@@ -4,21 +4,22 @@
 	import UsefulLinks from "./UsefulLinks.svelte";
 
 	import BreadCrumbs from "./BreadCrumbs.svelte";
-	import Description from "./Description.svelte";
-    import Admissions from "./Admissions.svelte";
+	import Resume from "./Resume.svelte";
+	import Admissions from "./Admissions.svelte";
 
-    import Bac from "./Bac.svelte";
+	import Bac from "./Bac.svelte";
+    import Tabs from "$components/Tabs.svelte";
 
 	let { data } = $props();
-	let current = $derived(
-		data.formation?.statistiques.at(-1),
-	);
+	let current = $derived(data.formation?.statistiques.at(-1));
+
+	let activeTab = $state("resume");
 </script>
 
 {#if !data.formation}
 	<div>Formation introuvable</div>
 {:else}
-	<div class="min-h-screen bg-slate-50 rounded-xl p-4">
+	<div class="min-h-screen bg-base-200 rounded-xl p-4">
 		<div class="container mx-auto">
 			<BreadCrumbs formation={data.formation} />
 
@@ -28,43 +29,62 @@
 			<!-- Détails -->
 			<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
 				<div class="lg:col-span-2">
-					<!-- Description -->
-					<Description formation={data.formation} />
-
-					<!-- Bac -->
-					<div
-						class="card bg-white shadow mb-6 border border-gray-200"
-					>
-						<Bac formation={data.formation} {current} />
+					<div class="mb-4">
+						<Tabs
+						bind:active={activeTab}
+						tabs={[
+							{
+								label: 'Résumé',
+								code:'resume'
+							},
+							{
+								label: 'Baccalauréat',
+								code: 'bac',
+							},
+							{
+								label: 'Admissions',
+								code: 'admissions'
+							}
+						]} />
 					</div>
-
-					<!-- Débouchés -->
-					<Admissions formation={data.formation} {current} />
+					<div class="bg-base-100 rounded-2xl overflow-hidden">
+						<div class="px-5 pb-5 pt-5">
+							{#if activeTab === "resume"}
+								<!-- Description -->
+								<Resume formation={data.formation} />
+							{:else if activeTab === "bac"}
+								<!-- Bac -->
+								<Bac formation={data.formation} {current} />
+							{:else if activeTab === "admissions"}
+								<!-- Admissions -->
+								<Admissions
+									formation={data.formation}
+									{current}
+								/>
+							{/if}
+						</div>
+					</div>
 				</div>
 
 				<!-- Sidebar -->
 				<div class="space-y-6">
 					<!-- Établissements -->
-					<div class="card bg-white shadow border border-gray-200">
+					<div class="card card-border bg-base-100">
 						<div class="card-body">
 							<h2 class="card-title text-primary">
 								Établissements proposant cette formation
 							</h2>
-							<div class="space-y-2">
-								Bientôt !
-							</div>
+							<div class="space-y-2">Bientôt !</div>
 						</div>
 					</div>
 
 					<!-- Statistiques -->
-					<div class="card bg-white shadow border border-gray-200">
+					<div class="card card-border bg-base-100">
 						<div class="card-body">
 							<h2 class="card-title mb-4 text-primary">
 								Autres formations de l'établissement
 							</h2>
-							<div class="space-y-3">
-								Bientôt !
-							</div>
+							<div class="space-y-3">Bientôt !</div>
 						</div>
 					</div>
 				</div>

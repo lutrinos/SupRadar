@@ -5,8 +5,8 @@
     let { formation, current } = $props();
 </script>
 
-<div class="card-body">
-    <h2 class="card-title text-primary">Baccalauréat</h2>
+<section class="space-y-6">
+    <h2 class="text-2xl font-semibold text-primary">Baccalauréat</h2>
     <BarChart
         x="year"
         data={formation.statistiques.map((s: any) => {
@@ -141,4 +141,4 @@
             [current.stats[IndiceStats.Acc_sansmention], 'n\'ont pas eu de mention']
         ].filter(([n, _]) => n > 0).map(([n, b]) => `<code>${n}</code> candidats admis ${b}`).join(', ') }.
     </div>
-</div>
+</section>

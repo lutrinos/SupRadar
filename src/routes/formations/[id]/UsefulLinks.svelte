@@ -4,7 +4,7 @@
     let { formation } = $props();
 </script>
 
-<div class="card bg-white shadow mb-8 border border-gray-200">
+<div class="card card-border bg-base-100 mb-8">
     <div class="card-body">
         <h2 class="card-title">Liens utiles</h2>
         <ul class="list">

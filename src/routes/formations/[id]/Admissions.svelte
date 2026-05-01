@@ -5,16 +5,15 @@
     let { formation, current } = $props();
 </script>
 
-<div class="card bg-white shadow border border-gray-200">
-    <div class="card-body">
-        <h2 class="card-title text-primary">Admission</h2>
+<section class="space-y-6">
+    <h2 class="text-2xl font-semibold text-primary">Admission</h2>
 
-        <BarChart
-            legend
-            x="session"
-            seriesLayout="group"
-            height={300}
-            props={{
+    <BarChart
+        legend
+        x="session"
+        seriesLayout="group"
+        height={300}
+        props={{
                 xAxis: { format: "none" },
                 yAxis: { format: "metric" },
                 tooltip: {
@@ -75,7 +74,7 @@
             )}</code>.
         </div>
 
-        <h1 class="card-title text-primary">Vitesse de remplissage</h1>
+        <h2 class="text-2xl font-semibold text-primary">Vitesse de remplissage</h2>
         <BarChart
             height={300}
             seriesLayout="overlap"
@@ -136,5 +135,4 @@
         <div class="prose my-4" style="max-width: none">
             En {current.session}, <code>{current.stats[IndiceStats.pct_acc_debutpp]}%</code> des candidats admis ont reçu leur proposition au début de la procédure. Puis <code>{current.stats[IndiceStats.pct_acc_datebac]}%</code> l'avaient reçue avant l'ouverture de la phase complémentaire, et <code>{current.stats[IndiceStats.pct_acc_finpp]}%</code> avant la fin de la procédure principale.
         </div>
-    </div>
-</div>
+</section>
