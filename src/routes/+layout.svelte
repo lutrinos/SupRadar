@@ -7,7 +7,10 @@
 	let sidebarOpen = $state(false);
 </script>
 
-<svelte:head><link rel="icon" href={favicon} /></svelte:head>
+<svelte:head>
+	<link rel="icon" href={favicon} />
+	<script defer src="https://cloud.umami.is/script.js" data-website-id="ae5aa64e-400a-4e16-8987-0986aa82c30c"></script>
+</svelte:head>
 
 <!-- Navbar -->
 <div class="flex flex-col p-2 lg:p-8 min-h-screen">
