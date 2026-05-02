@@ -9,7 +9,7 @@
 
 <svelte:head>
 	<link rel="icon" href={favicon} />
-	<script defer src="https://cloud.umami.is/script.js" data-website-id="ae5aa64e-400a-4e16-8987-0986aa82c30c"></script>
+	<script defer src="/umami.js" data-website-id="ae5aa64e-400a-4e16-8987-0986aa82c30c"></script>
 </svelte:head>
 
 <!-- Navbar -->
