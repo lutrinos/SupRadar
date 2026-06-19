@@ -118,8 +118,13 @@
 </script>
 
 <section class="space-y-6">
+
+
+    <!-- Admissions -->
+    <h2 class="text-2xl font-semibold text-primary">Admissions</h2>
+
     <!-- Informations plus précises -->
-    <div class="mb-8 flex flex-col md:flex-row gap-4">
+    <div class="flex flex-col md:flex-row gap-4">
         <fieldset
             class="fieldset border-base-300 rounded-box flex-1 border p-4"
         >
@@ -177,8 +182,6 @@
         </div>
     {/if}
 
-    <!-- Admissions -->
-    <h2 class="text-2xl font-semibold text-primary">Admissions</h2>
     <BarChart
         legend
         x="session"
@@ -458,8 +461,63 @@
     />
 
     <div class="prose my-4" style="max-width: none">
-        En {current.session}, <code>{current.stats[IndiceStats.pct_f]}%</code>
-        des candidats admis étaient des filles, et
-        <code>{100 - current.stats[IndiceStats.pct_f]}%</code> des garçons. <br>
+        En {current.session}, il y a eu <code>{current.stats[IndiceStats.voe_tot_f]}</code> candidates et <code>{current.stats[IndiceStats.voe_tot] - current.stats[IndiceStats.voe_tot_f]}</code> candidats.
+        Parmi ceux-ci, <code>{current.stats[IndiceStats.Acc_tot_f]}</code> candidates ont été admises, et <code>{current.stats[IndiceStats.Acc_tot] - current.stats[IndiceStats.Acc_tot_f]}</code> candidats ont été admis.<br>
+        La promotion de {current.session} compte donc <code>{current.stats[IndiceStats.pct_f]}%</code> de filles et <code>{100 - current.stats[IndiceStats.pct_f]}%</code> de garçons.
+    </div>
+
+    <!-- Boursiers -->
+    <h2 class="text-2xl font-semibold text-primary">Boursiers</h2>
+    <BarChart
+        legend
+        x="session"
+        seriesLayout="stack"
+        height={300}
+        props={{
+            xAxis: { format: "none" },
+            yAxis: { format: "metric" },
+            tooltip: {
+                header: { format: "none" },
+            },
+            bars: {
+                strokeWidth: 0,
+            },
+        }}
+        series={[
+            {
+                key: "non",
+                color: "var(--color-blue-400)",
+                label: "Non boursiers",
+            },
+            {
+                key: "boursier",
+                color: "var(--color-amber-400)",
+                label: "Boursiers",
+            },
+        ]}
+        data={formation.statistiques.map((s: any) => {
+            return {
+                session: s.session,
+                boursier: s.stats[IndiceStats.Acc_brs],
+                non: s.stats[IndiceStats.Acc_tot] - s.stats[IndiceStats.Acc_brs],
+            };
+        })}
+    />
+
+    <div class="prose my-4" style="max-width: 100vw;">
+        En {current.session},
+        <code>{current.stats[IndiceStats.voe_tot]}</code> candidats ont confirmé
+        un vœux. Il y eu ensuite
+        <code>{current.stats[IndiceStats.nb_cla_PP]}</code>
+        candidats en liste d'appel, parmi lesquel
+        <code>{current.stats[IndiceStats.Prop_tot]}</code> ont reçu une
+        proposition d'admission. Cette année, le rang du dernier appelé était
+        <code
+            >{Math.max(
+                current.stats[IndiceStats.ran_grp1],
+                current.stats[IndiceStats.ran_grp2],
+                current.stats[IndiceStats.ran_grp3],
+            )}</code
+        >.
     </div>
 </section>
