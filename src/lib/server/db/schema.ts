@@ -1,4 +1,4 @@
-import { boolean, doublePrecision, index, integer, json, pgTable, primaryKey, text } from "drizzle-orm/pg-core";
+import { boolean, doublePrecision, index, integer, json, pgTable, primaryKey, text, varchar } from "drizzle-orm/pg-core";
 import { type InferSelectModel, relations } from 'drizzle-orm';
 
 export const departements = pgTable('departements', {
@@ -18,7 +18,18 @@ export const academies = pgTable('academies', {
 
 export const statuts = pgTable('statuts', {
 	code: integer().primaryKey(),
+	nom: text().notNull(),
+});
+
+export const secteurs = pgTable('secteurs', {
+	code: integer().primaryKey(),
 	nom: text().notNull()
+});
+
+export const comptes = pgTable('comptes', {
+	uai: text().notNull(),
+	type: text().notNull(),
+	valeur: text().notNull()
 });
 
 export const filiere1 = pgTable('filiere1', {
@@ -40,20 +51,64 @@ export const filiere3 = pgTable('filiere3', {
 });
 
 export const etablissements = pgTable('etablissements', {
+	// Informations officielles
+	id: text(),// identifiant interne à l'éducation nationale (?)
 	uai: text().primaryKey(),// code_uai
 	nom: text().notNull(),// etablissement
-	statutCode: integer().references(() => statuts.code),// statut
+	sigle: text(),// sigle
+	site: text(),// site web
+	creation: text(),// Date de création, format aaaa-mm-jj
+	reference: text(),// Texte créant l'établissement
+	referenceUrl: text(),// Lien de ce texte (legifrance)
+	statutCode: integer().references(() => statuts.code),
 
+	// Informations de contact
+	pays: integer(),
+	adresse: text(),
+	lieuDit: text(),
+	boitePostale: text(),
+	codePostal: text(),
+	localite: text(),
+	telephone: text(),
+
+	// Informations pratiques
+	type: integer(),// université, école d'ingé...
+	typologie: integer(),// type en plus précis
+	secteur: integer().references(() => secteurs.code),// statut public/privé
+	vague: integer(),// vague A, B, C, D, E de contractualisation
+
+	// Localisation
 	regionCode: integer().references(() => regions.code),
 	academieCode: integer().references(() => academies.code),
 	departementCode: text().references(() => departements.code),// code_departement
 	commune: text(),// nom_commune
-
-	formationsCount: integer().notNull(),
-
+	urbaine: text(),// code de la zone urbaine
 	longitude: doublePrecision(),// gps
-	latitude: doublePrecision()// gps
+	latitude: doublePrecision(),// gps
+
+	// Pratique
+	formationsCount: integer().notNull(),
+	article: text(),
+
+	// Informations annexe
+	anciens_uai: json().$type<string[]>(),
+	siret: varchar({ length: 14 }),// Système d'Identification du Répertoire des ÉTablissements
+	siren: varchar({ length: 9 }),// Système d'Identification du Répertoire des ENtreprises
+	rna: text(),// répertoire national des associations
+	wikidata: text(),
+	idref: varchar({ length: 9 }),// identifiant des bibliothèques de l'enseignement supérieur
+	eter: text(),// European Tertiary Education Register
+	ror: text(),// Research Organization Registry
+	pic: varchar({ length: 9 }),// Participant Identification Code
+	isni: varchar({ length: 16 }),// International Standard Name Identifier
+	orgref: integer(),// Organization Reference
+	fundingId: text(),// Source du financement (moins utilisé que le ROR)
+	scanr: text(),
+	hal: text(),
+	mooc: text(),
 });
+
+
 
 export const formations = pgTable('formations', {
 	id: integer().primaryKey(),
@@ -101,6 +156,10 @@ export const etablissementRelations = relations(etablissements, ({ many, one }) 
 		fields: [etablissements.academieCode],
 		references: [academies.code]
 	}),
+	secteur: one(secteurs, {
+		fields: [etablissements.secteur],
+		references: [secteurs.code]
+	}),
 	statut: one(statuts, {
 		fields: [etablissements.statutCode],
 		references: [statuts.code]
@@ -127,8 +186,9 @@ export type Departement = InferSelectModel<typeof departements>;
 export type Academie = InferSelectModel<typeof academies>;
 export type Region = InferSelectModel<typeof regions>;
 export type Formation = InferSelectModel<typeof formations>;
-export type Statut = InferSelectModel<typeof statuts>;
+export type Secteur = InferSelectModel<typeof secteurs>;
 export type Statistiques = InferSelectModel<typeof statistiques>;
 export type Filiere1 = InferSelectModel<typeof filiere1>;
 export type Filiere2 = InferSelectModel<typeof filiere2>;
 export type Filiere3 = InferSelectModel<typeof filiere3>;
+export type Statut = InferSelectModel<typeof statuts>;

@@ -1,34 +1,6 @@
 <script lang="ts">
     // @ts-expect-error
     import Changelog from "../../../CHANGELOG.md";
-
-    const data = [
-        [
-            "Parcoursup 2025",
-            "https://data.enseignementsup-recherche.gouv.fr/explore/assets/fr-esr-parcoursup/",
-            "24 avril 2026",
-        ],
-        [
-            "Parcoursup 2024",
-            "https://data.enseignementsup-recherche.gouv.fr/explore/assets/fr-esr-parcoursup_2024/",
-            "24 avril 2026",
-        ],
-        [
-            "Parcoursup 2023",
-            "https://data.enseignementsup-recherche.gouv.fr/explore/assets/fr-esr-parcoursup_2023/",
-            "25 avril 2026",
-        ],
-        [
-            "Parcoursup 2022",
-            "https://data.enseignementsup-recherche.gouv.fr/explore/assets/fr-esr-parcoursup_2022/",
-            "25 avril 2026",
-        ],
-        [
-            "Onisep - Idéo-Actions de formation initiale-Univers enseignement supérieur (Licence ODBL)",
-            "https://opendata.onisep.fr/data/605344579a7d7/2-ideo-actions-de-formation-initiale-univers-enseignement-superieur.htm?tab=table_696f661015211",
-            "25 avril 2026",
-        ],
-    ];
 </script>
 
 <div class="container mx-auto">

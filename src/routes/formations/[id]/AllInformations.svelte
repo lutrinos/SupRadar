@@ -1,5 +1,6 @@
 <script lang="ts">
-    import { getFiliere } from "$lib/data";
+    import Info from "$components/Info.svelte";
+import { getFiliere } from "$lib/data";
 
 
     let { formation } = $props();
@@ -7,6 +8,11 @@
 
 <div class="card card-border bg-base-100">
     <div class="card-body">
+
+        <Info>
+            Ce tableau liste toutes les informations récupérées par SupRadar sur l'établissement et la formation, sans faire le tri.
+        </Info>
+
         <h2 class="card-title">Toutes les informations</h2>
 
         <!-- Formation -->

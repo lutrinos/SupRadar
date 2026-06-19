@@ -9,7 +9,11 @@
 
 <svelte:head>
 	<link rel="icon" href={favicon} />
-	<script defer src="/script.js" data-website-id="ae5aa64e-400a-4e16-8987-0986aa82c30c"></script>
+	<script
+		defer
+		src="/script.js"
+		data-website-id="ae5aa64e-400a-4e16-8987-0986aa82c30c"
+	></script>
 </svelte:head>
 
 <!-- Navbar -->
@@ -49,7 +53,7 @@
 					<li><a href="/filieres">Filières</a></li>
 				</ul>
 			</div>
-			
+
 			<div class="navbar-end hidden lg:flex">
 				<label class="input input-bordered">
 					<svg
@@ -104,10 +108,7 @@
 				href="https://github.com/lutrinos/SupRadar"
 				class="link link-hover">GitHub</a
 			>
-			<a
-				href="/sources"
-				class="link link-hover">Sources</a
-			>
+			<a href="/sources" class="link link-hover">Sources</a>
 			<a href="/changelog" class="link link-hover">Changelog</a>
 		</nav>
 
@@ -162,9 +163,27 @@
 	</nav>-->
 
 		<aside>
-			<p>
-				Copyright © 2026 - Nathan Tillier
-			</p>
+			<p>Copyright © 2026 - Nathan Tillier</p>
 		</aside>
 	</footer>
+
+	<div
+		role="alert"
+		class="fixed left-0 bottom-0 w-screen rounded-none alert alert-error"
+	>
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			class="h-6 w-6 shrink-0 stroke-current"
+			fill="none"
+			viewBox="0 0 24 24"
+		>
+			<path
+				stroke-linecap="round"
+				stroke-linejoin="round"
+				stroke-width="2"
+				d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+			/>
+		</svg>
+		<span style="z-index: 0;">Attention ! Ce site est en construction et il est possible qu'il y ait des erreurs.</span>
+	</div>
 </div>

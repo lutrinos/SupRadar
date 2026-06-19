@@ -1,11 +1,15 @@
 <script lang="ts">
     import { getFiliere } from "$lib/data";
+    import Info from "$components/Info.svelte";
 
     let { formation } = $props();
 </script>
 
 <div class="card card-border bg-base-100 mb-8">
     <div class="card-body">
+        <Info>
+            Cet encart propose des liens redirigeant vers des informations officielles et des ressources complémentaires.
+        </Info>
         <h2 class="card-title">Liens utiles</h2>
         <ul class="list">
             <li class="list-row">

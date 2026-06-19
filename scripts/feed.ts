@@ -1,117 +1,17 @@
-import csv from "csv-parser";
-import { createReadStream } from "node:fs";
+
 import log from "./log";
 
 import { Academie, academies, Departement, departements, Etablissement, etablissements, Filiere1, filiere1, filiere2, Filiere2, filiere3, Filiere3, Formation, formations, Region, regions, statistiques, Statistiques, Statut, statuts } from "../src/lib/server/db/schema";
 import { db } from "./db";
 import { LigneCSV, IndiceStats } from "./types";
-import { Value } from "@sinclair/typebox/value";
-import { BuildSchema, createInsertSchema } from "drizzle-typebox";
+import { createInsertSchema } from "drizzle-typebox";
 import { sql } from "drizzle-orm";
+
+import { d, ds, Intermediary, parseCSV, slugify, chunk } from "./utils";
 
 const IndiceTrie = Object.entries(IndiceStats)
     .sort(([, indexA], [, indexB]) => indexA - indexB)
     .map(([key, _]) => key);
-
-const d = <T>(v: T | undefined, r: T) => v ?? r;
-const ds = (v: string, r: string) => v.length > 0 ? v : r;
-
-// Pour transformer du texte en slug
-function slugify(str: string) {
-    return str
-        .toLowerCase()
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]|^[^a-zA-Z0-9éèàç]+|[^a-zA-Z0-9éèàç]+$/g, '')
-        .replace(/[^a-zA-Z0-9éèàç]+/g, '-');
-}
-
-// Pour parser du csv
-async function parseCSV(year: number, callback: (data: any, year: number) => void) {
-    return new Promise((resolve) => {
-        createReadStream(`./data/source/fr-esr-parcoursup_${year}.csv`)
-            .pipe(csv({
-                separator: ';',
-            }))
-            .on('data', (c) => {
-                callback(c, year);
-            })
-            .on('end', () => {
-                resolve(undefined);
-            });
-    });
-}
-
-// Pour réaliser des chunks
-async function chunk<T>(arr: T[], chunkSize: number, callback: (c: T[]) => void) {
-    const promises = [];
-
-    for (let i = 0; i < arr.length; i += chunkSize) {
-        promises.push(callback(arr.slice(i, Math.min(i + chunkSize, arr.length))));
-    }
-
-    await Promise.all(promises);
-}
-
-// Pour stocker les valeurs intermédiaires
-class Intermediary<T> {
-    primary: string;
-    schema: BuildSchema<any, any, any>;
-    data: Map<string, T>
-
-    constructor(primary: any, schema: BuildSchema<any, any, any>) {
-        this.primary = primary;
-        this.schema = schema;
-        this.data = new Map();
-    }
-
-    add(data: T) {
-        if (!Value.Check(this.schema, data)) {
-            return log('error', 'Wrong data', data);
-        }
-
-        this.data.set(data[this.primary], data);
-    }
-
-    get(key: any) {
-        return this.data.get(key);
-    }
-
-    size() {
-        return this.data.size;
-    }
-
-    async save(path: string, key: any) {
-        const obj = {};
-
-        this.data.forEach((value) => {
-            // @ts-expect-error
-            obj[value[key]] = value;
-        });
-
-        // @ts-ignore
-        await Bun.write(path, JSON.stringify(obj));
-    }
-
-    code(key: any, codeKey: string) {
-        if (key && this.data.has(key)) {
-            // @ts-expect-error
-            return this.data.get(key)[codeKey];
-        }
-        return this.data.size;
-    }
-
-    async chunk(chunkSize: number, fn: (v: T[]) => void) {
-        const promises = [];
-        const arr = Array.from(this.data.values());
-
-        for (let i = 0; i < arr.length; i += chunkSize) {
-            promises.push(fn(arr.slice(i, Math.min(i + chunkSize, arr.length))));
-        }
-
-        await Promise.all(promises);
-    }
-}
-
 
 const stats: Statistiques[] = [];
 
@@ -181,19 +81,55 @@ const callback2025_2024_2023_2022 = (data: LigneCSV, session: number) => {
     const [lat, lng] = ds(data.G_olocalisation_des_formations, ",").split(',');
 
     tables.etablissements.add({
+        id: null,
         uai: data.cod_uai,
         nom: data.G_EA_LIB_VX as string,
+        sigle: null,
+        site: null,
+        creation: null,
+        reference: null,
+        referenceUrl: null,
         statutCode: sc,
 
+        pays: null,
+        adresse: null,
+        lieuDit: null,
+        boitePostale: null,
+        codePostal: null,
+        localite: null,
+        telephone: null,
+
+        type: null,
+        typologie: null,
+        secteur: null,
+        vague: null,
+
         regionCode: rc,
-        departementCode: data.dep,
         academieCode: ac,
-        commune: data.ville_etab,
+        departementCode: data.dep as string,
+        commune: data.ville_etab as string,
+        urbaine: null,
+        longitude: isNaN(parseFloat(lng)) ? null : parseFloat(lng),
+        latitude: isNaN(parseFloat(lat)) ? null : parseFloat(lat),
 
         formationsCount: d(tables.etablissements.get(data.cod_uai)?.formationsCount, 0) + 1,
+        article: "",
 
-        longitude: isNaN(parseFloat(lng)) ? null : parseFloat(lng),
-        latitude: isNaN(parseFloat(lat)) ? null : parseFloat(lat)
+        anciens_uai: null,
+        siret: null,
+        siren: null,
+        rna: null,// répertoire national des associations
+        wikidata: null,
+        idref: null,// identifiant des bibliothèques de l'enseignement supérieur
+        eter: null,// European Tertiary Education Register
+        ror: null,// Research Organization Registry
+        pic: null,// Participant Identification Code
+        isni: null,// International Standard Name Identifier
+        orgref: null,// Organization Reference
+        fundingId: null,// Source du financement (moins utilisé que le ROR)
+        scanr: null,
+        hal: null,
+        mooc: null,
     });
 
     tables.formations.add({
@@ -251,119 +187,119 @@ await parseCSV(2025, callback2025_2024_2023_2022);
 
 
 log('debug', 'Sauvegarde locale');
-// await tables.departements.save("./src/lib/data/departements.json", "code");
-// await tables.regions.save("./src/lib/data/regions.json", "code");
-// await tables.academies.save("./src/lib/data/academies.json", "code");
-// await tables.statuts.save("./src/lib/data/statuts.json", "code");
+await tables.departements.save("./src/lib/data/departements.json", "code");
+await tables.regions.save("./src/lib/data/regions.json", "code");
+await tables.academies.save("./src/lib/data/academies.json", "code");
+await tables.statuts.save("./src/lib/data/statuts.json", "code");
 
-// await tables.filiere1.save("./src/lib/data/filiere1.json", "code");
-// await tables.filiere2.save("./src/lib/data/filiere2.json", "code");
-// await tables.filiere3.save("./src/lib/data/filiere3.json", "code");
+await tables.filiere1.save("./src/lib/data/filiere1.json", "code");
+await tables.filiere2.save("./src/lib/data/filiere2.json", "code");
+await tables.filiere3.save("./src/lib/data/filiere3.json", "code");
 
 log('debug', 'Sauvegarde SQL');
 // On insère les départements
-// await tables.departements.chunk(1000, (data) => db.insert(departements).values(data).onConflictDoUpdate({
-//     target: departements.code,
-//     set: {
-//         nom: sql`excluded.nom`
-//     }
-// }));
+await tables.departements.chunk(1000, (data) => db.insert(departements).values(data).onConflictDoUpdate({
+    target: departements.code,
+    set: {
+        nom: sql`excluded.nom`
+    }
+}));
 
 log('debug', 'Départements insérés');
 
 // On insère les statuts
-// await tables.statuts.chunk(1000, (data) => db.insert(statuts).values(data).onConflictDoUpdate({
-//     target: statuts.code,
-//     set: {
-//         nom: sql`excluded.nom`
-//     }
-// }));
+await tables.statuts.chunk(1000, (data) => db.insert(statuts).values(data).onConflictDoUpdate({
+    target: statuts.code,
+    set: {
+        nom: sql`excluded.nom`
+    }
+}));
 
 log('debug', 'Status insérés');
 
 // On insère les régions
-// await tables.regions.chunk(1000, (data) => db.insert(regions).values(data).onConflictDoUpdate({
-//     target: regions.code,
-//     set: {
-//         nom: sql`excluded.nom`
-//     }
-// }));
+await tables.regions.chunk(1000, (data) => db.insert(regions).values(data).onConflictDoUpdate({
+    target: regions.code,
+    set: {
+        nom: sql`excluded.nom`
+    }
+}));
 
 log('debug', 'Régions insérées');
 
 // On insère les académies
-// await tables.academies.chunk(1000, (data) => db.insert(academies).values(data).onConflictDoUpdate({
-//     target: academies.code,
-//     set: {
-//         nom: sql`excluded.nom`
-//     }
-// }));
+await tables.academies.chunk(1000, (data) => db.insert(academies).values(data).onConflictDoUpdate({
+    target: academies.code,
+    set: {
+        nom: sql`excluded.nom`
+    }
+}));
 
 log('debug', 'Académies insérées');
 
 // On insère les filières
-// await tables.filiere1.chunk(1000, (data) => db.insert(filiere1).values(data).onConflictDoUpdate({
-//     target: filiere1.code,
-//     set: {
-//         nom: sql`excluded.nom`,
-//         slug: sql`excluded.slug`
-//     }
-// }))
+await tables.filiere1.chunk(1000, (data) => db.insert(filiere1).values(data).onConflictDoUpdate({
+    target: filiere1.code,
+    set: {
+        nom: sql`excluded.nom`,
+        slug: sql`excluded.slug`
+    }
+}))
 
-// await tables.filiere2.chunk(1000, (data) => db.insert(filiere2).values(data).onConflictDoUpdate({
-//     target: filiere2.code,
-//     set: {
-//         nom: sql`excluded.nom`,
-//         slug: sql`excluded.slug`
-//     }
-// }))
+await tables.filiere2.chunk(1000, (data) => db.insert(filiere2).values(data).onConflictDoUpdate({
+    target: filiere2.code,
+    set: {
+        nom: sql`excluded.nom`,
+        slug: sql`excluded.slug`
+    }
+}))
 
-// await tables.filiere3.chunk(1000, (data) => db.insert(filiere3).values(data).onConflictDoUpdate({
-//     target: filiere3.code,
-//     set: {
-//         nom: sql`excluded.nom`,
-//         slug: sql`excluded.slug`
-//     }
-// }))
+await tables.filiere3.chunk(1000, (data) => db.insert(filiere3).values(data).onConflictDoUpdate({
+    target: filiere3.code,
+    set: {
+        nom: sql`excluded.nom`,
+        slug: sql`excluded.slug`
+    }
+}))
 
 log('debug', 'Filières insérées');
 
 // On insère les établissements
-// await tables.etablissements.chunk(500, (data) => db.insert(etablissements).values(data).onConflictDoUpdate({
-//     target: etablissements.uai,
-//     set: {
-//         regionCode: sql`excluded.region_code`,
-//         academieCode: sql`excluded.academie_code`,
-//         departementCode: sql`excluded.departement_code`,
-//         statutCode: sql`excluded.statut_code`,
+await tables.etablissements.chunk(500, (data) => db.insert(etablissements).values(data).onConflictDoUpdate({
+    target: etablissements.uai,
+    set: {
+        regionCode: sql`excluded.region_code`,
+        academieCode: sql`excluded.academie_code`,
+        departementCode: sql`excluded.departement_code`,
+        statutCode: sql`excluded.statut_code`,
 
-//         longitude: sql`excluded.longitude`,
-//         latitude: sql`excluded.latitude`
-//     }
-// }));
+        longitude: sql`excluded.longitude`,
+        latitude: sql`excluded.latitude`
+    }
+}));
 
 log('debug', 'Établissements insérés');
 
 // On insère les formations
-// await tables.formations.chunk(500, (data) => db.insert(formations).values(data).onConflictDoUpdate({
-//     target: formations.id,
-//     set: {
-//         etablissementUai: sql`excluded.etablissement_uai`,
-//         nom: sql`excluded.nom`,
+await tables.formations.chunk(500, (data) => db.insert(formations).values(data).onConflictDoUpdate({
+    target: formations.id,
+    set: {
+        etablissementUai: sql`excluded.etablissement_uai`,
+        nom: sql`excluded.nom`,
 
-//         selective: sql`excluded.selective`,
-//         capacite: sql`excluded.capacite`,
+        selective: sql`excluded.selective`,
+        capacite: sql`excluded.capacite`,
 
-//         filiere1: sql`excluded.filiere1`,
-//         filiere2: sql`excluded.filiere2`,
-//         filiere3: sql`excluded.filiere3`,
+        filiere1: sql`excluded.filiere1`,
+        filiere2: sql`excluded.filiere2`,
+        filiere3: sql`excluded.filiere3`,
 
-//         detailForma: sql`excluded.detail_forma`,
-//         detailForma2: sql`excluded.detail_forma2`,
+        detailForma: sql`excluded.detail_forma`,
+        detailForma2: sql`excluded.detail_forma2`,
 
-//         recherche: sql`excluded.recherche`
-//     }
-// }));
+        recherche: sql`excluded.recherche`
+    }
+}));
 
 log('debug', 'Formations insérées');
 
