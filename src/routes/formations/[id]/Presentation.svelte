@@ -49,7 +49,7 @@
             <div class="stat">
                 <p class="stat-title">Capacité</p>
                 <p class="stat-value">
-                    {formation.capacite} places
+                    {current.stats[IndiceStats.capa_fin]} places
                 </p>
                 <p class="stat-desc">
                     Et {current.stats[IndiceStats.Acc_tot]} étudiants admis
