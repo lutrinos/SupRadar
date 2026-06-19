@@ -1,4 +1,6 @@
 <script lang="ts">
+    import Formation from '$components/Formation.svelte';
+
 	let { data } = $props();
 </script>
 
@@ -9,7 +11,7 @@
 			<div class="mb-6">
 				<a
 					href="/etablissements"
-					class="btn bg-emerald-500 hover:bg-emerald-600 text-white border-0 gap-2"
+					class="btn bg-primary text-white border-0 gap-2"
 				>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
@@ -28,9 +30,9 @@
 			</div>
 
 			<!-- Header Card -->
-			<div class="card bg-white shadow-lg mb-8 border border-gray-200">
+			<div class="card bg-white mb-8 border border-gray-200">
 				<div class="card-body">
-					<h1 class="card-title text-4xl mb-4 text-emerald-600">
+					<h1 class="card-title text-4xl mb-4 text-primary">
 						Établissement
 					</h1>
 					<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -67,16 +69,16 @@
 			<!-- Details Grid -->
 			<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 				<!-- Informations Générales -->
-				<div class="card bg-white shadow border border-gray-200">
+				<div class="card bg-white border border-gray-200">
 					<div class="card-body">
-						<h2 class="card-title text-emerald-600">
+						<h2 class="card-title text-primary">
 							Informations Générales
 						</h2>
 						<div class="space-y-4">
 							<div>
 								<p class="text-sm text-gray-500">Adresse</p>
 								<p class="text-gray-800">
-									123 rue de la École, 54000 Nancy
+									{data.etablissement.adresse ?? data.etablissement.commune}
 								</p>
 							</div>
 							<div>
@@ -92,65 +94,45 @@
 				</div>
 
 				<!-- Statistiques -->
-				<div class="card bg-white shadow border border-gray-200">
+				<div class="card bg-white border border-gray-200">
 					<div class="card-body">
-						<h2 class="card-title text-emerald-600">
+						<h2 class="card-title text-primary">
 							Statistiques
 						</h2>
 						<div class="space-y-4">
 							<div class="flex justify-between items-center">
 								<span class="text-gray-700"
-									>Nombre d'élèves</span
+									>Nombre de places</span
 								>
 								<span
-									class="badge bg-emerald-100 text-emerald-800"
-									>1,250</span
+									class="badge bg-primary-content text-primary"
+									>{data.etablissement.formations.reduce((acc, formation) => acc + (formation.capacite ?? 0), 0)}</span
 								>
 							</div>
 							<div class="flex justify-between items-center">
 								<span class="text-gray-700"
 									>Formations proposées</span
 								>
-								<span class="badge bg-blue-100 text-blue-800"
+								<span class="badge bg-primary-content text-primary"
 									>{data.etablissement.formationsCount}</span
 								>
 							</div>
-							<!--<div class="flex justify-between items-center">
-								<span class="text-gray-700"
-									>Taux de réussite</span
-								>
-								<span class="badge bg-green-100 text-green-800"
-									>92%</span
-								>
-							</div>-->
 						</div>
 					</div>
 				</div>
 			</div>
 
 			<!-- Formations liées -->
-			<div class="card bg-white shadow mt-6 border border-gray-200">
+			<div class="card bg-white mt-6 border border-gray-200">
 				<div class="card-body">
-					<h2 class="card-title mb-4 text-emerald-600">
+					<h2 class="card-title mb-4 text-primary">
 						Formations proposées
 					</h2>
 					<div
 						class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
 					>
 						{#each data.etablissement.formations as formation (formation.id)}
-							<a
-								href={`/formations/${formation.id}`}
-								class="card bg-gray-50 hover:bg-emerald-50 transition border border-gray-200 hover:border-emerald-300 cursor-pointer"
-							>
-								<div class="card-body">
-									<h3 class="font-bold text-emerald-700">
-										{formation.nom}
-									</h3>
-									<p class="text-sm text-gray-600">
-										{formation.capacite} places
-									</p>
-								</div>
-							</a>
+							<Formation formation={formation} />
 						{/each}
 					</div>
 				</div>

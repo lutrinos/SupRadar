@@ -2,7 +2,7 @@
 	<div class="container mx-auto px-4">
 		<!-- Header -->
 		<div class="mb-12">
-			<h1 class="text-4xl md:text-5xl font-bold mb-4 text-emerald-600">Établissements</h1>
+			<h1 class="text-4xl md:text-5xl font-bold mb-4 text-primary">Établissements</h1>
 			<p class="text-lg text-gray-600">
 				Découvrez et explorez les établissements présents sur Parcoursup.
 			</p>
@@ -13,19 +13,19 @@
 			<input
 				type="text"
 				placeholder="Rechercher par nom..."
-				class="input input-bordered w-full max-w-md border-emerald-300 focus:border-emerald-500 focus:ring-emerald-500"
+				class="input input-bordered input-primary"
 			/>
 		</div>
 
 		<!-- Table -->
 		<div class="overflow-x-auto">
-			<table class="table w-full bg-white rounded-lg shadow-lg border border-gray-200">
-				<thead class="bg-emerald-50">
+			<table class="table w-full bg-base-100 rounded-lg shadow-lg border border-gray-200">
+				<thead class="bg-primary-content">
 					<tr>
-						<th class="text-emerald-700 font-semibold">UAI</th>
-						<th class="hidden sm:table-cell text-emerald-700 font-semibold">Nom</th>
-						<th class="hidden md:table-cell text-emerald-700 font-semibold">Type</th>
-						<th class="text-emerald-700 font-semibold">Action</th>
+						<th class="text-primary font-semibold">UAI</th>
+						<th class="hidden sm:table-cell text-primary font-semibold">Nom</th>
+						<th class="hidden md:table-cell text-primary font-semibold">Type</th>
+						<th class="text-primary font-semibold">Action</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -33,10 +33,10 @@
 						<td class="font-medium">0691774D</td>
 						<td class="hidden sm:table-cell">Université Claude Bernard</td>
 						<td class="hidden md:table-cell">
-							<span class="badge bg-emerald-100 text-emerald-800">Université</span>
+							<span class="badge bg-primary-content text-primary">Université</span>
 						</td>
 						<td>
-							<a href="/etablissements/0691774D" class="btn btn-sm bg-emerald-500 hover:bg-emerald-600 text-white border-0">
+							<a href="/etablissements/0691774D" class="btn btn-sm bg-primary hover:bg-primary-content text-white border-0">
 								Voir
 							</a>
 						</td>
@@ -45,10 +45,10 @@
 						<td class="font-medium">	0690026D</td>
 						<td class="hidden sm:table-cell">Lycée du Parc</td>
 						<td class="hidden md:table-cell">
-							<span class="badge bg-emerald-100 text-emerald-800">Lycée</span>
+							<span class="badge bg-primary-content text-primary">Lycée</span>
 						</td>
 						<td>
-							<a href="/etablissements/0690026D" class="btn btn-sm bg-emerald-500 hover:bg-emerald-600 text-white border-0">
+							<a href="/etablissements/0690026D" class="btn btn-sm bg-primary hover:bg-primary-content text-white border-0">
 								Voir
 							</a>
 						</td>
