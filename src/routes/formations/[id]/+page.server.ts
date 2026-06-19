@@ -55,6 +55,7 @@ export const load = async ({ params }) => {
     const formation = formations[0];
 
     if (formation?.statistiques) {
+        console.log('statistiques', formation.statistiques)
         formation.statistiques.sort((a, b) => a.session - b.session);
     }
 
