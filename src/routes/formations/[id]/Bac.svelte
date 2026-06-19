@@ -6,6 +6,8 @@
 </script>
 
 <section class="space-y-6">
+
+    <!-- Types de bac -->
     <h2 class="text-2xl font-semibold text-primary">Baccalauréat</h2>
     <BarChart
         x="year"
@@ -67,8 +69,8 @@
         {@html current.stats[IndiceStats.Acc_at] > 0 ? `, et <code>${current.stats[IndiceStats.Acc_at]}</code> candidats admis n'étaient pas des néo-bacheliers ou n'ont pas passé le baccalauréat français.` : '.' }
     </div>
 
-    <h2 class="card-title text-primary">Baccalauréat</h2>
-
+    <!-- Mentions -->
+    <h2 class="card-title text-primary">Mentions</h2>
     <BarChart
         x="year"
         data={formation.statistiques.map((s: any) => {

@@ -30,8 +30,6 @@ export const load = async ({ params }) => {
 
     */
 
-    console.log('id', params.id);
-
     const formations = await db.query.formations.findMany({
         where: (fields, { eq }) => eq(fields.id, parseInt(params.id)),
         with: {
@@ -50,12 +48,9 @@ export const load = async ({ params }) => {
         }
     });
 
-    console.log('formations',formations);
-
     const formation = formations[0];
 
     if (formation?.statistiques) {
-        console.log('statistiques', formation.statistiques)
         formation.statistiques.sort((a, b) => a.session - b.session);
     }
 

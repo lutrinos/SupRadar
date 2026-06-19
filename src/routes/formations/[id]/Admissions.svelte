@@ -2,12 +2,15 @@
     import { IndiceStats } from "$lib";
     import { AreaChart, BarChart } from "layerchart";
 
+    let percent = (v: number) => v + '%';
+
     let { formation, current } = $props();
 </script>
 
 <section class="space-y-6">
-    <h2 class="text-2xl font-semibold text-primary">Admission</h2>
 
+    <!-- Admissions -->
+    <h2 class="text-2xl font-semibold text-primary">Admissions</h2>
     <BarChart
         legend
         x="session"
@@ -74,6 +77,7 @@
             )}</code>.
         </div>
 
+        <!-- Vitesse de remplissage -->
         <h2 class="text-2xl font-semibold text-primary">Vitesse de remplissage</h2>
         <BarChart
             height={300}
@@ -85,11 +89,14 @@
                     format: 'none'
                 },
                 xAxis: {
-                    format: 'none'
+                    format: percent
                 },
                 tooltip: {
                     header: {
                         format: 'none'
+                    },
+                    item: {
+                        format: percent
                     },
                     hideTotal: true
                 },
@@ -134,5 +141,59 @@
 
         <div class="prose my-4" style="max-width: none">
             En {current.session}, <code>{current.stats[IndiceStats.pct_acc_debutpp]}%</code> des candidats admis ont reçu leur proposition au début de la procédure. Puis <code>{current.stats[IndiceStats.pct_acc_datebac]}%</code> l'avaient reçue avant l'ouverture de la phase complémentaire, et <code>{current.stats[IndiceStats.pct_acc_finpp]}%</code> avant la fin de la procédure principale.
+        </div>
+
+        <!-- Parité -->
+        <h2 class="text-2xl font-semibold text-primary">Parité</h2>
+        <BarChart
+            legend
+            height={300}
+            seriesLayout="stack"
+            x="session"
+            props={{
+                yAxis: {
+                    format: percent
+                },
+                xAxis: {
+                    format: 'none'
+                },
+                tooltip: {
+                    header: {
+                        format: 'none'
+                    },
+                    item: {
+                        format: percent
+                    },
+                    hideTotal: true
+                },
+                bars: {
+                    strokeWidth: 0
+                }
+            }}
+            series={[
+                {
+                    label: 'Garçons',
+                    key: 'boy',
+                    color: 'var(--color-emerald-400)'
+                },
+                {
+                    label: 'Filles',
+                    color: 'var(--color-amber-400)',
+                    key: 'girl'
+                },
+            ]}
+            data={
+                formation.statistiques.map((s: any) => {
+                    return {
+                        session: s.session,
+                        girl: s.stats[IndiceStats.pct_f],
+                        boy: 100 - s.stats[IndiceStats.pct_f]
+                    };
+                })
+            }
+        />
+
+        <div class="prose my-4" style="max-width: none">
+            En {current.session}, <code>{current.stats[IndiceStats.pct_f]}%</code> des candidats admis étaient des filles, et <code>{100 - current.stats[IndiceStats.pct_f]}%</code> des garçons.
         </div>
 </section>
