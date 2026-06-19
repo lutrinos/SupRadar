@@ -219,7 +219,7 @@
                 label: "Rang du dernier appelé",
             },
         ]}
-        data={formation.statistiques.map((s: any) => {
+        data={formation.statistiques.reverse().map((s: any) => {
             return {
                 session: s.session,
                 voeux: voeux(s.stats),
@@ -335,7 +335,7 @@
         height={300}
         props={{
             xAxis: { format: "none" },
-            yAxis: { format: "metric" },
+            yAxis: { format: "none" },
             tooltip: {
                 header: { format: "none" },
             },
@@ -505,19 +505,6 @@
     />
 
     <div class="prose my-4" style="max-width: 100vw;">
-        En {current.session},
-        <code>{current.stats[IndiceStats.voe_tot]}</code> candidats ont confirmé
-        un vœux. Il y eu ensuite
-        <code>{current.stats[IndiceStats.nb_cla_PP]}</code>
-        candidats en liste d'appel, parmi lesquel
-        <code>{current.stats[IndiceStats.Prop_tot]}</code> ont reçu une
-        proposition d'admission. Cette année, le rang du dernier appelé était
-        <code
-            >{Math.max(
-                current.stats[IndiceStats.ran_grp1],
-                current.stats[IndiceStats.ran_grp2],
-                current.stats[IndiceStats.ran_grp3],
-            )}</code
-        >.
+        En {current.session}, sur les <code>{current.stats[IndiceStats.Acc_tot]}</code> admis, <code>{current.stats[IndiceStats.Acc_brs]}</code> étaient boursiers.
     </div>
 </section>
