@@ -45,12 +45,12 @@
 				class="input flex-1"
 			/>
 
-			<select class="select select-bordered">
+			<!--<select class="select select-bordered">
 				<option disabled selected>Filtrer par type</option>
 				<option>Générale</option>
 				<option>Technologique</option>
 				<option>Professionnelle</option>
-			</select>
+			</select>-->
 		</div>
 
 		<!-- Formations Grid -->

@@ -74,7 +74,7 @@
 					<div class="card card-border bg-base-100">
 						<div class="card-body relative">
 							<!-- svelte-ignore a11y_consider_explicit_label -->
-							<Info id="etablissement-formation-info">
+							<Info>
 								Pas encore implémenté.
 							</Info>
 							<h2 class="card-title text-primary">
@@ -87,7 +87,7 @@
 					<!-- Statistiques -->
 					<div class="card card-border bg-base-100">
 						<div class="card-body">
-							<Info id="autres-formations-info">
+							<Info>
 								Pas encore implémenté.
 							</Info>
 							<h2 class="card-title mb-4 text-primary">

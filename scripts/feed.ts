@@ -169,13 +169,13 @@ const callback2025_2024_2023_2022 = (data: LigneCSV, session: number) => {
 
 
 log('debug', 'Données 2022');
-// await parseCSV(2022, callback2025_2024_2023_2022);
+await parseCSV(2022, callback2025_2024_2023_2022);
 
 log('debug', 'Données 2023');
-// await parseCSV(2023, callback2025_2024_2023_2022);
+await parseCSV(2023, callback2025_2024_2023_2022);
 
 log('debug', 'Données 2024');
-// await parseCSV(2024, callback2025_2024_2023_2022);
+await parseCSV(2024, callback2025_2024_2023_2022);
 
 // On met à jour quelques données pour n'avoir que les dernières
 tables.etablissements.data.forEach((v) => {

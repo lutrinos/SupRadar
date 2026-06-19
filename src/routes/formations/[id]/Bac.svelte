@@ -135,9 +135,9 @@
     <div class="prose mt-4" style="max-width: none;">
          En {current.session}, {@html [
             [current.stats[IndiceStats.Acc_tbf], 'ont eu les félicitations du jury'],
-            [current.stats[IndiceStats.Acc_tb], 'on eu une mention très bien'],
-            [current.stats[IndiceStats.Acc_ab],'on eu une mention assez bien'],
-            [current.stats[IndiceStats.Acc_b],'on eu une mention bien'],
+            [current.stats[IndiceStats.Acc_tb], 'ont eu une mention très bien'],
+            [current.stats[IndiceStats.Acc_ab],'ont eu une mention assez bien'],
+            [current.stats[IndiceStats.Acc_b],'ont eu une mention bien'],
             [current.stats[IndiceStats.Acc_sansmention], 'n\'ont pas eu de mention']
         ].filter(([n, _]) => n > 0).map(([n, b]) => `<code>${n}</code> candidats admis ${b}`).join(', ') }.
     </div>
