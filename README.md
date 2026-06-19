@@ -1,8 +1,5 @@
 # SupRadar
 
-Lorem ipsum dolor sit amet.
-
-
 Éléments à rajouter :
 -  Places en internat : https://data.education.gouv.fr/explore/assets/fr-en-internats/
 - Cartographies : https://data.education.gouv.fr/explore/assets/fr-esr-cartographie_formations_parcoursup/
