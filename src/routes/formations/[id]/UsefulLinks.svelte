@@ -28,7 +28,7 @@
             </li>
             <li class="list-row">
                 <a
-                    href={`/filieres/${getFiliere(1, formation.filiere1).slug}/${getFiliere(2, formation.filiere2).slug}/${getFiliere(2, formation.filiere3).slug}`}
+                    href={`/filieres/${getFiliere(1, formation.filiere1).slug}/${getFiliere(2, formation.filiere2).slug}/${getFiliere(3, formation.filiere3).slug}`}
                     class="link link-primary"
                     >Voir les établissements proposant la même formation</a
                 >
