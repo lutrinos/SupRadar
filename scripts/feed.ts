@@ -68,12 +68,14 @@ const callback2025_2024_2023_2022 = (data: LigneCSV, session: number) => {
 
     tables.filiere2.add({
         code: fc2,
+        parent: fc1,
         nom: ds(data.form_lib_voe_acc, "Aucune filière renseignée"),
         slug: slugify(ds(data.form_lib_voe_acc, "Aucune filière renseignée")).toLowerCase()
     });
 
     tables.filiere3.add({
         code: fc3,
+        parent: fc2,
         nom: ds(data.fil_lib_voe_acc, "Aucune filière renseignée"),
         slug: slugify(ds(data.fil_lib_voe_acc, "Aucune filière renseignée").toLowerCase())
     });
@@ -203,7 +205,39 @@ await tables.filiere1.save("./src/lib/data/filiere1.json", "code");
 await tables.filiere2.save("./src/lib/data/filiere2.json", "code");
 await tables.filiere3.save("./src/lib/data/filiere3.json", "code");
 
+// Sauvegarde SQL
 log('debug', 'Sauvegarde SQL');
+
+// On insère les filières
+await tables.filiere1.chunk(1000, (data) => db.insert(filiere1).values(data).onConflictDoUpdate({
+    target: filiere1.code,
+    set: {
+        nom: sql`excluded.nom`,
+        slug: sql`excluded.slug`
+    }
+}))
+
+await tables.filiere2.chunk(1000, (data) => db.insert(filiere2).values(data).onConflictDoUpdate({
+    target: filiere2.code,
+    set: {
+        nom: sql`excluded.nom`,
+        slug: sql`excluded.slug`,
+        parent: sql`excluded.parent`
+    }
+}))
+
+await tables.filiere3.chunk(1000, (data) => db.insert(filiere3).values(data).onConflictDoUpdate({
+    target: filiere3.code,
+    set: {
+        nom: sql`excluded.nom`,
+        slug: sql`excluded.slug`,
+        parent: sql`excluded.parent`
+    }
+}))
+
+log('debug', 'Filières insérées');
+
+
 // On insère les départements
 await tables.departements.chunk(1000, (data) => db.insert(departements).values(data).onConflictDoUpdate({
     target: departements.code,
@@ -243,33 +277,6 @@ await tables.academies.chunk(1000, (data) => db.insert(academies).values(data).o
 }));
 
 log('debug', 'Académies insérées');
-
-// On insère les filières
-await tables.filiere1.chunk(1000, (data) => db.insert(filiere1).values(data).onConflictDoUpdate({
-    target: filiere1.code,
-    set: {
-        nom: sql`excluded.nom`,
-        slug: sql`excluded.slug`
-    }
-}))
-
-await tables.filiere2.chunk(1000, (data) => db.insert(filiere2).values(data).onConflictDoUpdate({
-    target: filiere2.code,
-    set: {
-        nom: sql`excluded.nom`,
-        slug: sql`excluded.slug`
-    }
-}))
-
-await tables.filiere3.chunk(1000, (data) => db.insert(filiere3).values(data).onConflictDoUpdate({
-    target: filiere3.code,
-    set: {
-        nom: sql`excluded.nom`,
-        slug: sql`excluded.slug`
-    }
-}))
-
-log('debug', 'Filières insérées');
 
 // On insère les établissements
 await tables.etablissements.chunk(500, (data) => db.insert(etablissements).values(data).onConflictDoUpdate({

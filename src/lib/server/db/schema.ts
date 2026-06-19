@@ -39,12 +39,14 @@ export const filiere1 = pgTable('filiere1', {
 });
 
 export const filiere2 = pgTable('filiere2', {
+	parent: integer().references(() => filiere1.code),
 	code: integer().primaryKey(),
 	nom: text().notNull(),
 	slug: text().notNull()
 });
 
 export const filiere3 = pgTable('filiere3', {
+	parent:  integer().references(() => filiere2.code),
 	code: integer().primaryKey(),
 	nom: text().notNull(),
 	slug: text().notNull()
