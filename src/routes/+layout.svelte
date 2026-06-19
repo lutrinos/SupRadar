@@ -169,7 +169,7 @@
 
 	<div
 		role="alert"
-		class="fixed left-0 bottom-0 w-screen rounded-none alert alert-error"
+		class="fixed left-0 bottom-0 w-screen rounded-none alert alert-error alert-soft"
 	>
 		<svg
 			xmlns="http://www.w3.org/2000/svg"

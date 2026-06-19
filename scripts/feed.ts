@@ -137,6 +137,13 @@ const callback2025_2024_2023_2022 = (data: LigneCSV, session: number) => {
         etablissementUai: data.cod_uai,
         nom: data.LIB_COMP_VOE_INS,
 
+        regionCode: rc,
+        academieCode: ac,
+        departementCode: data.dep as string,
+        commune: data.ville_etab as string,
+        longitude: isNaN(parseFloat(lng)) ? null : parseFloat(lng),
+        latitude: isNaN(parseFloat(lat)) ? null : parseFloat(lat),
+
         selective: data.select_form === "formation sélective",
         capacite: parseInt(data.capa_fin ?? "0"),
 
@@ -286,6 +293,14 @@ await tables.formations.chunk(500, (data) => db.insert(formations).values(data).
     set: {
         etablissementUai: sql`excluded.etablissement_uai`,
         nom: sql`excluded.nom`,
+
+        regionCode: sql`excluded.region_code`,
+        academieCode: sql`excluded.academie_code`,
+        departementCode: sql`excluded.departement_code`,
+        commune: sql`excluded.commune`,
+        longitude: sql`excluded.longitude`,
+        latitude: sql`excluded.latitude`,
+
 
         selective: sql`excluded.selective`,
         capacite: sql`excluded.capacite`,

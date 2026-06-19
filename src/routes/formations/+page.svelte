@@ -3,6 +3,7 @@
 	import { navigating } from "$app/state";
 	import { goto } from "$app/navigation";
 	import Selective from "$components/Selective.svelte";
+    import Formation from "$components/Formation.svelte";
 
 	let { data } = $props();
 	let query = $state(page.url.searchParams.get("q") ?? "");
@@ -62,23 +63,7 @@
 		{:else}
 			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 				{#each data.formations as formation (formation.id)}
-					<a
-						href={`/formations/${formation.id}`}
-						class="card bg-white shadow-lg hover:shadow-xl transition"
-					>
-						<div class="card-body">
-							<Selective selective={formation.selective} />
-
-							<h2 class="card-title">{formation.nom}</h2>
-							<div
-								class="card-actions justify-between items-center mt-4"
-							>
-								<span class="text-sm text-base-content/60"
-									>{formation.capacite} places</span
-								>
-							</div>
-						</div>
-					</a>
+					<Formation formation={formation} />
 				{/each}
 			</div>
 

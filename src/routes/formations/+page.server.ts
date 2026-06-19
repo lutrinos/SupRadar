@@ -17,7 +17,7 @@ export const load: PageServerLoad = async ({ url }) => {
 
     const data = await db.select({
         formation: formations,
-        totalCount: sql<number>`cast(count(*) OVER() as integer)`
+        totalCount: sql<number>`cast(count(*) OVER() as integer)`,
     })
         .from(formations)
         .where(sql`${q} <% ${formations.recherche}`)

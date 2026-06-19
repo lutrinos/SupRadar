@@ -114,6 +114,13 @@ export const formations = pgTable('formations', {
 	id: integer().primaryKey(),
 	etablissementUai: text().notNull().references(() => etablissements.uai),// code_uai
 	nom: text().notNull(),// filière
+	
+	regionCode: integer().references(() => regions.code),
+	academieCode: integer().references(() => academies.code),
+	departementCode: text().references(() => departements.code),// code_departement
+	commune: text(),// nom_commune
+	longitude: doublePrecision(),// gps
+	latitude: doublePrecision(),// gps
 
 	selective: boolean(),// selectivite
 	capacite: integer(),// capacite
@@ -171,7 +178,19 @@ export const formationsRelations = relations(formations, ({ many, one }) => ({
 	etablissement: one(etablissements, {
 		fields: [formations.etablissementUai],
 		references: [etablissements.uai]
-	})
+	}),
+	departement: one(departements, {
+		fields: [formations.departementCode],
+		references: [departements.code]
+	}),
+	region: one(regions, {
+		fields: [formations.regionCode],
+		references: [regions.code]
+	}),
+	academie: one(academies, {
+		fields: [formations.academieCode],
+		references: [academies.code]
+	}),
 }));
 
 export const statistiquesRelations = relations(statistiques, ({ one }) => ({
