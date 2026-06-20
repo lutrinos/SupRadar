@@ -1,66 +1,36 @@
 <script lang="ts">
-    import Formation from '$components/Formation.svelte';
+	import Formation from "$components/Formation.svelte";
+    import { getAcademie, getStatut } from "$lib/data";
 
 	let { data } = $props();
 </script>
 
 {#if data.etablissement}
-	<div class="min-h-screen bg-gray-50 py-12">
+	<div class="min-h-screen bg-base-200 rounded-selector py-12">
 		<div class="container mx-auto px-4">
-			<!-- Back Button -->
-			<div class="mb-6">
-				<a
-					href="/etablissements"
-					class="btn bg-primary text-white border-0 gap-2"
-				>
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						class="h-5 w-5"
-						viewBox="0 0 20 20"
-						fill="currentColor"
-					>
-						<path
-							fill-rule="evenodd"
-							d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
-							clip-rule="evenodd"
-						/>
-					</svg>
-					Retour
-				</a>
-			</div>
-
 			<!-- Header Card -->
 			<div class="card bg-white mb-8 border border-gray-200">
 				<div class="card-body">
 					<h1 class="card-title text-4xl mb-4 text-primary">
-						Établissement
+						{data.etablissement.nom}
 					</h1>
-					<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-						<div>
-							<p class="text-sm text-gray-500 mb-1">UAI</p>
-							<p class="text-lg font-semibold text-gray-800">
-								{data.etablissement.uai}
-							</p>
+					<div class="stats">
+						<div class="stat">
+							<div class="stat-title">Type d'établissement</div>
+							<div class="stat-value">{getStatut(data.etablissement.statutCode ?? -1).nom}</div>
 						</div>
-						<div>
-							<p class="text-sm text-gray-500 mb-1">Nom</p>
-							<p class="text-lg font-semibold text-gray-800">
-								{data.etablissement.nom}
-							</p>
+
+						<div class="stat">
+							<div class="stat-title">Commune</div>
+							<div class="stat-value">{data.etablissement.commune}</div>
+							<div class="stat-desc">
+								Académie de {getAcademie(data.etablissement.academieCode ?? -1).nom}
+							</div>
 						</div>
-						<div>
-							<p class="text-sm text-gray-500 mb-1">
-								Type d'établissement
-							</p>
-							<p class="text-lg font-semibold text-gray-800">
-								{data.etablissement.statut?.nom}
-							</p>
-						</div>
-						<div>
-							<p class="text-sm text-gray-500 mb-1">Région</p>
-							<p class="text-lg font-semibold text-gray-800">
-								{data.etablissement.region?.nom}
-							</p>
+
+						<div class="stat">
+							<div class="stat-title">Nombre de formations</div>
+							<div class="stat-value">{data.etablissement.formationsCount}</div>
 						</div>
 					</div>
 				</div>
@@ -78,7 +48,8 @@
 							<div>
 								<p class="text-sm text-gray-500">Adresse</p>
 								<p class="text-gray-800">
-									{data.etablissement.adresse ?? data.etablissement.commune}
+									{data.etablissement.adresse ??
+										data.etablissement.commune}
 								</p>
 							</div>
 							<div>
@@ -96,9 +67,7 @@
 				<!-- Statistiques -->
 				<div class="card bg-white border border-gray-200">
 					<div class="card-body">
-						<h2 class="card-title text-primary">
-							Statistiques
-						</h2>
+						<h2 class="card-title text-primary">Statistiques</h2>
 						<div class="space-y-4">
 							<div class="flex justify-between items-center">
 								<span class="text-gray-700"
@@ -106,14 +75,19 @@
 								>
 								<span
 									class="badge bg-primary-content text-primary"
-									>{data.etablissement.formations.reduce((acc, formation) => acc + (formation.capacite ?? 0), 0)}</span
+									>{data.etablissement.formations.reduce(
+										(acc, formation) =>
+											acc + (formation.capacite ?? 0),
+										0,
+									)}</span
 								>
 							</div>
 							<div class="flex justify-between items-center">
 								<span class="text-gray-700"
 									>Formations proposées</span
 								>
-								<span class="badge bg-primary-content text-primary"
+								<span
+									class="badge bg-primary-content text-primary"
 									>{data.etablissement.formationsCount}</span
 								>
 							</div>
@@ -132,7 +106,7 @@
 						class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
 					>
 						{#each data.etablissement.formations as formation (formation.id)}
-							<Formation formation={formation} />
+							<Formation {formation} />
 						{/each}
 					</div>
 				</div>
