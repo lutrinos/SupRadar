@@ -108,7 +108,14 @@ export const etablissements = pgTable('etablissements', {
 	scanr: text(),
 	hal: text(),
 	mooc: text(),
-});
+
+	recherche: text().default(""),// Champ de recherche pour les recherches textuelles
+}, (table) => [
+	index("etablissements_search_idx").using(
+		"gist",
+		table.recherche.op("gist_trgm_ops")
+	)
+]);
 
 
 

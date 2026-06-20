@@ -1,81 +1,89 @@
-<div class="min-h-screen bg-gray-50 py-12">
+<script lang="ts">
+	import { page } from "$app/state";
+	import { goto } from "$app/navigation";
+	import { getStatut } from "$lib/data";
+	import Etablissement from "$components/Etablissement.svelte";
+
+	let { data } = $props();
+
+	let query = $state(page.url.searchParams.get("q") ?? "");
+	let currentPage = $state(
+		parseInt(page.url.searchParams.get("p") ?? "0") || 0,
+	);
+
+	$effect(() => {
+		const q = query;
+		const p = currentPage;
+
+		const timer = setTimeout(() => {
+			const url = new URL(page.url);
+
+			if (q) url.searchParams.set("q", q);
+			else url.searchParams.delete("q");
+
+			if (p > 0) url.searchParams.set("p", p.toString());
+			else url.searchParams.delete("p");
+
+			goto(url, { replaceState: true, keepFocus: true, noScroll: true });
+		}, 500);
+
+		return () => clearTimeout(timer);
+	});
+</script>
+
+<div class="min-h-screen py-12">
 	<div class="container mx-auto px-4">
+
 		<!-- Header -->
 		<div class="mb-12">
-			<h1 class="text-4xl md:text-5xl font-bold mb-4 text-primary">Établissements</h1>
+			<h1 class="text-4xl md:text-5xl font-bold mb-4 text-primary">
+				Établissements
+			</h1>
 			<p class="text-lg text-gray-600">
-				Découvrez et explorez les établissements présents sur Parcoursup.
+				Découvrez et explorez les établissements présents sur
+				Parcoursup.
 			</p>
 		</div>
 
-		<!-- Search Bar -->
-		<div class="mb-8">
-			<input
-				type="text"
-				placeholder="Rechercher par nom..."
-				class="input input-bordered input-primary"
-			/>
+		<!-- Filtres -->
+		<div class="mb-6 flex justify-center md:flex-row gap-4">
+			<label class="input input-primary">
+				<svg
+					class="h-[1em] opacity-50"
+					xmlns="http://www.w3.org/2000/svg"
+					viewBox="0 0 24 24"
+				>
+					<g
+						stroke-linejoin="round"
+						stroke-linecap="round"
+						stroke-width="2.5"
+						fill="none"
+						stroke="currentColor"
+					>
+						<circle cx="11" cy="11" r="8"></circle>
+						<path d="m21 21-4.3-4.3"></path>
+					</g>
+				</svg>
+				<input
+					bind:value={query}
+					type="search"
+					placeholder="Rechercher un établissement..."
+				/>
+			</label>
 		</div>
 
 		<!-- Table -->
-		<div class="overflow-x-auto">
-			<table class="table w-full bg-base-100 rounded-lg shadow-lg border border-gray-200">
-				<thead class="bg-primary-content">
-					<tr>
-						<th class="text-primary font-semibold">UAI</th>
-						<th class="hidden sm:table-cell text-primary font-semibold">Nom</th>
-						<th class="hidden md:table-cell text-primary font-semibold">Type</th>
-						<th class="text-primary font-semibold">Action</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr class="hover:bg-emerald-25 transition">
-						<td class="font-medium">0691774D</td>
-						<td class="hidden sm:table-cell">Université Claude Bernard</td>
-						<td class="hidden md:table-cell">
-							<span class="badge bg-primary-content text-primary">Université</span>
-						</td>
-						<td>
-							<a href="/etablissements/0691774D" class="btn btn-sm bg-primary hover:bg-primary-content text-white border-0">
-								Voir
-							</a>
-						</td>
-					</tr>
-					<tr class="hover:bg-emerald-25 transition">
-						<td class="font-medium">	0690026D</td>
-						<td class="hidden sm:table-cell">Lycée du Parc</td>
-						<td class="hidden md:table-cell">
-							<span class="badge bg-primary-content text-primary">Lycée</span>
-						</td>
-						<td>
-							<a href="/etablissements/0690026D" class="btn btn-sm bg-primary hover:bg-primary-content text-white border-0">
-								Voir
-							</a>
-						</td>
-					</tr>
-				</tbody>
-			</table>
+		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+			{#each data.etablissements as etablissement (etablissement.uai)}
+				<Etablissement {etablissement} />
+			{/each}
 		</div>
 
-		<!-- Empty State (if no results) 
-		<div class="flex justify-center items-center py-12">
-			<div class="text-center max-w-md">
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					class="h-20 w-20 mx-auto mb-4 text-emerald-300"
-					fill="none"
-					viewBox="0 0 24 24"
-					stroke="currentColor"
-				>
-					<path
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						stroke-width="2"
-						d="M19 21l-7-5m0 0l-7 5m7-5v8"
-					/>
-				</svg>
-				<p class="text-gray-500">Aucun établissement trouvé</p>
+		<!-- Aucun résultat trouvé -->
+		{#if data.etablissements.length === 0}
+			<div class="mt-8 text-center text-gray-500">
+				{ query.trim().length === 0 ? "Effectuer une recherche" : "Aucun établissement trouvé." }
 			</div>
-		</div>-->
+		{/if}
 	</div>
 </div>

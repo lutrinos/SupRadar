@@ -132,6 +132,8 @@ const callback2025_2024_2023_2022 = (data: LigneCSV, session: number) => {
         scanr: null,
         hal: null,
         mooc: null,
+        
+        recherche: [data.cod_uai, data.G_EA_LIB_VX, data.ville_etab, data.acad_mies, data.region_etab_aff, data.dep_lib].filter((i) => !!i).join(' ').normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase()
     });
 
     tables.formations.add({
@@ -288,11 +290,15 @@ await tables.etablissements.chunk(500, (data) => db.insert(etablissements).value
         statutCode: sql`excluded.statut_code`,
 
         longitude: sql`excluded.longitude`,
-        latitude: sql`excluded.latitude`
+        latitude: sql`excluded.latitude`,
+
+        recherche: sql`excluded.recherche`
     }
 }));
 
 log('debug', 'Établissements insérés');
+
+throw Error("stop");
 
 // On insère les formations
 await tables.formations.chunk(500, (data) => db.insert(formations).values(data).onConflictDoUpdate({
