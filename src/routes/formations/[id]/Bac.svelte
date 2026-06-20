@@ -1,12 +1,11 @@
 <script lang="ts">
-    import { BarChart, defaultChartPadding } from "layerchart";
+    import { BarChart } from "layerchart";
     import { IndiceStats } from "$lib";
 
     let { formation, current } = $props();
 </script>
 
 <section class="space-y-6">
-
     <!-- Types de bac -->
     <h2 class="text-2xl font-semibold text-primary">Baccalauréat</h2>
     <BarChart
@@ -17,7 +16,7 @@
                 gen: s.stats[IndiceStats.Acc_BG],
                 tec: s.stats[IndiceStats.Acc_BT],
                 pro: s.stats[IndiceStats.Acc_BP],
-                autre: s.stats[IndiceStats.Acc_at]
+                autre: s.stats[IndiceStats.Acc_at],
             };
         })}
         height={300}
@@ -54,19 +53,27 @@
             },
             {
                 key: "autre",
-                label: 'Autre',
-                color: 'var(--color-yellow-400)'
-            }
+                label: "Autre",
+                color: "var(--color-yellow-400)",
+            },
         ]}
     />
 
     <div class="prose my-4" style="max-width: none;">
         En {current.session}, {@html [
-            [current.stats[IndiceStats.Acc_BG], 'général'],
-            [current.stats[IndiceStats.Acc_BT],'technologique'],
-            [current.stats[IndiceStats.Acc_BP],'professionnel'],
-        ].filter(([n, _]) => n > 0).map(([n, b]) => `<code>${n}</code> candidats admis ont passé un bac ${b}`).join(', ') }
-        {@html current.stats[IndiceStats.Acc_at] > 0 ? `, et <code>${current.stats[IndiceStats.Acc_at]}</code> candidats admis n'étaient pas des néo-bacheliers ou n'ont pas passé le baccalauréat français.` : '.' }
+            [current.stats[IndiceStats.Acc_BG], "général"],
+            [current.stats[IndiceStats.Acc_BT], "technologique"],
+            [current.stats[IndiceStats.Acc_BP], "professionnel"],
+        ]
+            .filter(([n, _]) => n > 0)
+            .map(
+                ([n, b]) =>
+                    `<code>${n}</code> candidats admis ont passé un bac ${b}`,
+            )
+            .join(", ")}
+        {@html current.stats[IndiceStats.Acc_at] > 0
+            ? `, et <code>${current.stats[IndiceStats.Acc_at]}</code> candidats admis n'étaient pas des néo-bacheliers ou n'ont pas passé le baccalauréat français.`
+            : "."}
     </div>
 
     <!-- Mentions -->
@@ -135,12 +142,24 @@
     />
 
     <div class="prose mt-4" style="max-width: none;">
-         En {current.session}, {@html [
-            [current.stats[IndiceStats.Acc_tbf], 'ont eu les félicitations du jury'],
-            [current.stats[IndiceStats.Acc_tb], 'ont eu une mention très bien'],
-            [current.stats[IndiceStats.Acc_ab],'ont eu une mention assez bien'],
-            [current.stats[IndiceStats.Acc_b],'ont eu une mention bien'],
-            [current.stats[IndiceStats.Acc_sansmention], 'n\'ont pas eu de mention']
-        ].filter(([n, _]) => n > 0).map(([n, b]) => `<code>${n}</code> candidats admis ${b}`).join(', ') }.
+        En {current.session}, {@html [
+            [
+                current.stats[IndiceStats.Acc_tbf],
+                "ont eu les félicitations du jury",
+            ],
+            [current.stats[IndiceStats.Acc_tb], "ont eu une mention très bien"],
+            [
+                current.stats[IndiceStats.Acc_ab],
+                "ont eu une mention assez bien",
+            ],
+            [current.stats[IndiceStats.Acc_b], "ont eu une mention bien"],
+            [
+                current.stats[IndiceStats.Acc_sansmention],
+                "n'ont pas eu de mention",
+            ],
+        ]
+            .filter(([n, _]) => n > 0)
+            .map(([n, b]) => `<code>${n}</code> candidats admis ${b}`)
+            .join(", ")}.
     </div>
 </section>

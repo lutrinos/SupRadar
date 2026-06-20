@@ -55,3 +55,7 @@
 /* Content (text) color */
 --color-surface-content: var(--color-gray-900);
 }
+
+table.table tr:hover {
+  @apply hover:bg-primary-content;
+}

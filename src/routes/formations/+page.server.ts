@@ -27,6 +27,9 @@ export const load: PageServerLoad = async ({ url }) => {
 
     return {
         formations: data.map((row) => row.formation),
-        total: data[0]?.totalCount ?? 0
+        total: data[0]?.totalCount ?? 0,
+        pageSize: pageSize,
+        currentPage: p,
+        pageCount: Math.ceil((data[0]?.totalCount ?? 0) / pageSize)
     }
 };

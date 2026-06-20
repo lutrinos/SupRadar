@@ -7,23 +7,26 @@
 
 	let { data } = $props();
 	let query = $state(page.url.searchParams.get("q") ?? "");
-	let p = $state(parseInt(page.url.searchParams.get("p") ?? "0") || 0);
+	let currentPage = $state(parseInt(page.url.searchParams.get("p") ?? "0") || 0);
 
 	$effect(() => {
 		const q = query;
+		const p = currentPage;
 
 		const timer = setTimeout(() => {
 			const url = new URL(page.url);
+
 			if (q) url.searchParams.set("q", q);
 			else url.searchParams.delete("q");
+
+			if (p > 0) url.searchParams.set("p", p.toString());
+			else url.searchParams.delete("p");
 
 			goto(url, { replaceState: true, keepFocus: true, noScroll: true });
 		}, 500);
 
 		return () => clearTimeout(timer);
 	});
-
-	$inspect(p).with(console.log);
 </script>
 
 <div class="flex justify-center min-h-screen bg-base-100 py-12">
@@ -77,13 +80,19 @@
 				{/each}
 			</div>
 
-			<!--<div class="py-12 flex justify-center">
-				<div class="join">
-					{#each {length: Math.ceil((data.total || 0) / 20)} as _, i }
-						<a href={`/formations?q=${query}&p=${i}`} class={["join-item btn", i === p ? "btn-active" : ""]}>{i + 1}</a>
-					{/each}
+			{#if data.pageCount && data.pageCount > 1}
+				<div class="mt-6 flex justify-center">
+					<div class="join">
+						<button onclick={() => {
+							currentPage = Math.max(0, currentPage - 1);
+						}} disabled={data.currentPage === 0} class="join-item btn">«</button>
+						<button class="join-item btn">Page { data.currentPage + 1} sur { data.pageCount }</button>
+						<button onclick={() => {
+							currentPage = Math.min(data.pageCount - 1, currentPage + 1);
+						}} disabled={data.currentPage === data.pageCount - 1} class="join-item btn">»</button>
+					</div>
 				</div>
-			</div>-->
+			{/if}
 		{/if}
 	</div>
 </div>
