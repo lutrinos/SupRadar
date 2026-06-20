@@ -3,7 +3,7 @@
 <!-- Présentation -->
 
 <!-- from-emerald-500 to-emerald-400 -->
-<div class="hero p-32 rounded-xl bg-linear-to-br from-primary to-emerald-400">
+<div class="hero px-8 py-48  rounded-xl bg-linear-to-br from-primary to-emerald-400">
 	<div class="hero-content text-center text-white">
 		<div class="max-w-2xl">
 			<h1 class="text-5xl md:text-6xl font-bold mb-6">SupRadar</h1>
