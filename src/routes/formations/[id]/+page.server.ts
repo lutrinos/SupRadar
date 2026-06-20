@@ -10,7 +10,8 @@ export const load = async ({ params }) => {
                     statut: true,
                     region: true,
                     academie: true,
-                    departement: true
+                    departement: true,
+                    formations: true
                 }
             }
         },

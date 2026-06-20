@@ -2,7 +2,7 @@
     import { getFiliere } from "$lib/data";
     import Selective from "./Selective.svelte";
 
-    let { formation } = $props();
+    let { formation, tiny = false } = $props();
 </script>
 
 <a
@@ -30,32 +30,37 @@
                 </svg>
 
                 <span class="text-content"
-                    >{getFiliere(1, formation.filiere1)?.nom} &gt; {getFiliere(2, formation.filiere2)?.nom} &gt; {getFiliere(3, formation.filiere3)?.nom}</span
+                    >{getFiliere(1, formation.filiere1)?.nom} &gt; {getFiliere(
+                        2,
+                        formation.filiere2,
+                    )?.nom} &gt; {getFiliere(3, formation.filiere3)?.nom}</span
                 >
             </li>
-            <li>
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    stroke-width="1.5"
-                    stroke="currentColor"
-                    class="size-4 me-2 inline-block text-content"
-                    fill="none"
-                >
-                    <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
-                    />
-                    <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z"
-                    />
-                </svg>
+            {#if !tiny}
+                <li>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.5"
+                        stroke="currentColor"
+                        class="size-4 me-2 inline-block text-content"
+                        fill="none"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+                        />
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z"
+                        />
+                    </svg>
 
-                <span class="text-content">{formation.commune}</span>
-            </li>
+                    <span class="text-content">{formation.commune}</span>
+                </li>
+            {/if}
             <li>
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -76,8 +81,10 @@
             </li>
         </ul>
 
-        <div class="card-actions flex-1 justify-end items-end mt-4">
-            <Selective selective={formation.selective} />
-        </div>
+        {#if !tiny}
+            <div class="card-actions flex-1 justify-end items-end mt-4">
+                <Selective selective={formation.selective} />
+            </div>
+        {/if}
     </div>
 </a>

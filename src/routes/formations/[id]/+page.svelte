@@ -10,11 +10,14 @@
 	import Bac from "./Bac.svelte";
 	import Tabs from "$components/Tabs.svelte";
     import Info from "$components/Info.svelte";
+    import Formation from "$components/Formation.svelte";
 
 	let { data } = $props();
 	let current = $derived(data.formation?.statistiques.at(-1));
 
 	let activeTab = $state("resume");
+
+	$inspect(data.formation)
 </script>
 
 {#if !data.formation}
@@ -88,12 +91,18 @@
 					<div class="card card-border bg-base-100">
 						<div class="card-body">
 							<Info>
-								Pas encore implémenté.
+								Une liste des différentes formations proposées par l'établissement.
 							</Info>
 							<h2 class="card-title mb-4 text-primary">
 								Autres formations de l'établissement
 							</h2>
-							<div class="space-y-3">Bientôt !</div>
+							<div class="space-y-3">
+								{#each data.formation.etablissement.formations as f (f.id)}
+									{#if f.id !== data.formation.id}
+										<Formation tiny formation={f} />
+									{/if}
+								{/each}
+							</div>
 						</div>
 					</div>
 				</div>
