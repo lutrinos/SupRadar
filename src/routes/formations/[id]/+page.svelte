@@ -11,6 +11,7 @@
 	import Tabs from "$components/Tabs.svelte";
     import Info from "$components/Info.svelte";
     import Formation from "$components/Formation.svelte";
+    import { getFiliere } from "$lib/data/index.js";
 
 	let { data } = $props();
 	let current = $derived(data.formation?.statistiques.at(-1));
@@ -83,7 +84,9 @@
 							<h2 class="card-title text-primary">
 								Établissements proposant cette formation
 							</h2>
-							<div class="space-y-2">Bientôt !</div>
+							<div class="space-y-2">
+								Bientôt ! Une liste est disponible <a class="link" href={`/filieres/${getFiliere(1, data.formation.filiere1)?.slug}/${getFiliere(2, data.formation.filiere2)?.slug}/${getFiliere(3, data.formation.filiere3)?.slug}`}>ici</a>.
+							</div>
 						</div>
 					</div>
 
