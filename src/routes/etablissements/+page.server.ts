@@ -2,7 +2,7 @@ import { db } from "$lib/server/db";
 import { etablissements } from "$lib/server/db/schema";
 import { sql } from "drizzle-orm";
 
-const pageSize = 40;
+const pageSize = 42;
 
 export const load = async ({ url }) => {
     const q = url.searchParams.get('q')?.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase() ?? '';

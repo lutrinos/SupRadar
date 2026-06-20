@@ -33,7 +33,6 @@
 
 <div class="min-h-screen py-12">
 	<div class="container mx-auto px-4">
-
 		<!-- Header -->
 		<div class="mb-12">
 			<h1 class="text-4xl md:text-5xl font-bold mb-4 text-primary">
@@ -73,16 +72,48 @@
 		</div>
 
 		<!-- Table -->
+		{#if data.etablissements.length > 0}
+			<div class="m-4 text-base-content text-sm">{data.total} résultats sur {data.pageCount} pages</div>
+		{/if}
 		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 			{#each data.etablissements as etablissement (etablissement.uai)}
 				<Etablissement {etablissement} />
 			{/each}
 		</div>
 
+		{#if data.pageCount && data.pageCount > 1}
+			<div class="mt-6 flex justify-center">
+				<div class="join">
+					<button
+						onclick={() => {
+							currentPage = Math.max(0, currentPage - 1);
+						}}
+						disabled={data.currentPage === 0}
+						class="join-item btn">«</button
+					>
+					<button class="join-item btn"
+						>Page {data.currentPage + 1} sur {data.pageCount}</button
+					>
+					<button
+						onclick={() => {
+							currentPage = Math.min(
+								data.pageCount - 1,
+								currentPage + 1,
+							);
+						}}
+						disabled={data.currentPage === data.pageCount - 1}
+						class="join-item btn">»</button
+					>
+				</div>
+			</div>
+		{/if}
+
 		<!-- Aucun résultat trouvé -->
 		{#if data.etablissements.length === 0}
 			<div class="mt-8 text-center text-gray-500">
-				{ query.trim().length === 0 ? "Effectuer une recherche" : "Aucun établissement trouvé." }
+				{query.trim().length === 0
+					? "Effectuer une recherche"
+					: "Aucun établissement trouvé."}
 			</div>
 		{/if}
 	</div>

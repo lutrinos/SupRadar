@@ -74,6 +74,8 @@
 				></span>
 			</div>
 		{:else}
+			<div class="m-4 text-base-content text-sm">{data.total} résultats sur {data.pageCount} pages</div>
+
 			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 				{#each data.formations as formation (formation.id)}
 					<Formation {formation} />
