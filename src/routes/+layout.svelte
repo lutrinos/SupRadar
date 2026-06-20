@@ -2,6 +2,7 @@
 	import "../app.css";
 	import "layerchart/daisyui-5.css";
 	import favicon from "$lib/assets/favicon.svg";
+    import { goto } from "$app/navigation";
 
 	let { children } = $props();
 	let sidebarOpen = $state(false);
@@ -76,6 +77,18 @@
 						type="text"
 						placeholder="Rechercher une formation..."
 						class="grow"
+						onkeydown={(e) => {
+							if (e.key === "Enter") {
+								const url = new URL("/formations", window.location.origin);
+
+								url.searchParams.set("q", (e.target as HTMLInputElement).value as string);
+								
+								goto(url);
+
+								(e.target as HTMLInputElement).blur();
+								(e.target as HTMLInputElement).value = "";
+							}
+						}}
 					/>
 				</label>
 			</div>
