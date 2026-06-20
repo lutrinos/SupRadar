@@ -1,4 +1,5 @@
 import { db } from '$lib/server/db';
+import { error } from '@sveltejs/kit';
 
 export const load = async ({ params }) => {
     const formations = await db.query.formations.findMany({
@@ -21,6 +22,10 @@ export const load = async ({ params }) => {
     });
 
     const formation = formations[0];
+
+    if (!formation) {
+        return error(404, 'Formation non trouvée');
+    }
 
     if (formation?.statistiques) {
         formation.statistiques.sort((a, b) => a.session - b.session);
