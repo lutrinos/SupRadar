@@ -5,6 +5,11 @@
 	let { data } = $props();
 </script>
 
+<svelte:head>
+	<title>{data.etablissement?.nom} | SupRadar</title>
+	<meta name="description" content={`Découvrez les informations disponibles sur l'établissement ${data.etablissement?.nom}`} />
+</svelte:head>
+
 {#if data.etablissement}
 	<div class="min-h-screen bg-base-200 rounded-selector py-12">
 		<div class="container mx-auto px-4">

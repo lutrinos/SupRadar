@@ -21,6 +21,11 @@
     let query = $state("");
 </script>
 
+<svelte:head>
+	<title>{filiere3?.nom ?? "Filières"} | SupRadar</title>
+	<meta name="description" content={`Découvrez les formations de la filière ${filiere3?.nom}`} />
+</svelte:head>
+
 <div class="flex justify-center min-h-screen bg-base-100 py-12">
     <div class="container">
         <div class="mb-6">

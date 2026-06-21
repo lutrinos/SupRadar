@@ -1,3 +1,8 @@
+<svelte:head>
+	<title>Sources | SupRadar</title>
+	<meta name="description" content="Sources en opendata utilisées pour les informations affichées" />
+</svelte:head>
+
 <script lang="ts">
     const data = [
         [

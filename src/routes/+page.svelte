@@ -1,6 +1,8 @@
 
-
-<!-- Présentation -->
+<svelte:head>
+	<title>Accueil | SupRadar</title>
+	<meta name="description" content="Explorateur de formations sur Parcoursup" />
+</svelte:head>
 
 <!-- from-emerald-500 to-emerald-400 -->
 <div class="hero px-8 py-48  rounded-xl bg-linear-to-br from-primary to-emerald-400">

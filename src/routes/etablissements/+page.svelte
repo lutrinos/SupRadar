@@ -31,6 +31,11 @@
 	});
 </script>
 
+<svelte:head>
+	<title>Rechercher un établissement | SupRadar</title>
+	<meta name="description" content="Rechercher un établissement sur Parcoursup" />
+</svelte:head>
+
 <div class="min-h-screen py-12">
 	<div class="container mx-auto px-4">
 		<!-- Header -->
