@@ -184,6 +184,7 @@
 
     <BarChart
         legend
+        xDomainSort
         x="session"
         seriesLayout="group"
         height={300}
@@ -219,7 +220,7 @@
                 label: "Rang du dernier appelé",
             },
         ]}
-        data={formation.statistiques.reverse().map((s: any) => {
+        data={formation.statistiques.map((s: any) => {
             return {
                 session: s.session,
                 voeux: voeux(s.stats),
@@ -258,6 +259,7 @@
     <h2 class="text-2xl font-semibold text-primary">Vitesse de remplissage</h2>
     <BarChart
         height={300}
+        yDomainSort
         seriesLayout="overlap"
         orientation="horizontal"
         y="session"
@@ -331,6 +333,7 @@
     <AreaChart
         legend
         x="session"
+        xDomainSort
         seriesLayout="overlap"
         height={300}
         props={{
@@ -382,6 +385,7 @@
     <AreaChart
         height={300}
         x="session"
+        xDomainSort
         seriesLayout="stack"
         legend
         props={{

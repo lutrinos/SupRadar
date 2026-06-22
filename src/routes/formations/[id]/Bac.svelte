@@ -6,10 +6,12 @@
 </script>
 
 <section class="space-y-6">
+
     <!-- Types de bac -->
     <h2 class="text-2xl font-semibold text-primary">Baccalauréat</h2>
     <BarChart
         x="year"
+        xDomainSort
         data={formation.statistiques.map((s: any) => {
             return {
                 year: s.session,
@@ -80,6 +82,7 @@
     <h2 class="card-title text-primary">Mentions</h2>
     <BarChart
         x="year"
+        xDomainSort
         data={formation.statistiques.map((s: any) => {
             return {
                 year: s.session,

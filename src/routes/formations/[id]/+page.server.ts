@@ -27,9 +27,7 @@ export const load = async ({ params }) => {
         return error(404, 'Formation non trouvée');
     }
 
-    if (formation?.statistiques) {
-        formation.statistiques.sort((a, b) => a.session - b.session);
-    }
+    formation.statistiques.sort((a, b) => a.session - b.session);
 
     return {
         formation
