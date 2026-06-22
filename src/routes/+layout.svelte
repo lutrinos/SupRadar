@@ -2,10 +2,21 @@
 	import "../app.css";
 	import "layerchart/daisyui-5.css";
 	import favicon from "$lib/assets/favicon.svg";
-    import { goto } from "$app/navigation";
+    import { goto, afterNavigate } from "$app/navigation";
 
 	let { children } = $props();
-	let sidebarOpen = $state(false);
+
+	afterNavigate(({ from, to }) => {
+		const purl = from?.url;
+		const url = to?.url;
+
+		if (purl && url && purl !== url) {
+			// @ts-ignore
+			window.goatcounter.count({
+				path: url.pathname
+			})
+		}
+	})
 </script>
 
 <svelte:head>
