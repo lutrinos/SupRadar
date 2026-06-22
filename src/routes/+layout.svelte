@@ -15,7 +15,7 @@
 		src="/script.js"
 		data-website-id="ae5aa64e-400a-4e16-8987-0986aa82c30c"
 	></script>-->
-	<script data-goatcounter="https://lutrinos.goatcounter.com/count"
+	<script data-goatcounter="/api/count"
         async src="/script2.js"></script>
 </svelte:head>
 
