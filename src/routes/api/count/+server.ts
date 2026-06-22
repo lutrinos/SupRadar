@@ -14,8 +14,7 @@ export async function POST({ request, getClientAddress }) {
 
     return fetch(url, {
         headers: request.headers,
-        method: 'POST',
-        body: request.body
+        method: 'POST'
     })
 }
 
