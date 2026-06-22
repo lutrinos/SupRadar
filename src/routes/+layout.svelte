@@ -7,13 +7,13 @@
 	let { children } = $props();
 
 	afterNavigate(({ from, to }) => {
-		const purl = from?.url;
-		const url = to?.url;
+		const ppath = from?.url?.pathname;
+		const path = to?.url?.pathname;
 
-		if (purl && url && purl !== url) {
+		if (ppath && path && ppath !== path) {
 			// @ts-ignore
 			window.goatcounter.count({
-				path: url.pathname
+				path
 			})
 		}
 	})
