@@ -8,6 +8,7 @@ import { createInsertSchema } from "drizzle-typebox";
 import { sql } from "drizzle-orm";
 
 import { d, ds, Intermediary, parseCSV, slugify, chunk } from "./utils";
+import { listenerCount } from "process";
 
 const IndiceTrie = Object.entries(IndiceStats)
     .sort(([, indexA], [, indexB]) => indexA - indexB)
@@ -17,48 +18,64 @@ const stats: Statistiques[] = [];
 
 const tables = {
 
-    // @ts-expect-error
+    // @ts-ignore
     departements: new Intermediary<Departement>('code', createInsertSchema(departements)),
     regions: new Intermediary<Region>("nom", createInsertSchema(regions)),
     academies: new Intermediary<Academie>("nom", createInsertSchema(academies)),
     statuts: new Intermediary<Statut>("nom", createInsertSchema(statuts)),
 
+    // @ts-ignore
     etablissements: new Intermediary<Etablissement>("uai", createInsertSchema(etablissements)),
     formations: new Intermediary<Formation>("id", createInsertSchema(formations)),
 
-    filiere1: new Intermediary<Filiere1>("nom", createInsertSchema(filiere1)),
-    filiere2: new Intermediary<Filiere2>("nom", createInsertSchema(filiere2)),
-    filiere3: new Intermediary<Filiere3>("nom", createInsertSchema(filiere3)),
+    filiere1: new Intermediary<Filiere1>("code", createInsertSchema(filiere1)),
+    filiere2: new Intermediary<Filiere2>("code", createInsertSchema(filiere2)),
+    filiere3: new Intermediary<Filiere3>("code", createInsertSchema(filiere3)),
 };
 
+const LastSession = 2025;
+
 const callback2025_2024_2023_2022 = (data: LigneCSV, session: number) => {
-    const sc = tables.statuts.code(data.contrat_etab, "code");
-    const rc = tables.regions.code(data.region_etab_aff, "code");
-    const ac = tables.academies.code(data.acad_mies, "code");
 
-    const fc1 = tables.filiere1.code(data.Fili, "code");
-    const fc2 = tables.filiere2.code(data.form_lib_voe_acc, "code");
-    const fc3 = tables.filiere3.code(data.fil_lib_voe_acc, "code");
+    const formationId = parseInt(data.cod_aff_form ?? -1);
 
-    tables.departements.add({
-        code: data.dep,
-        nom: ds(data.dep_lib, "Département inconnu")
+    // On ne garde pas les statistiques de formations ayant disparues
+    // Autrement dit si ce n'est pas la dernière session et que la formation n'existe pas
+    if (session !== LastSession && !tables.formations.get(formationId)) {
+        return;
+    }
+
+    stats.push({
+        session,
+        formationId: formationId,
+
+        stats: IndiceTrie.map((key: string) => {
+            // @ts-expect-error
+            const v = parseFloat(data[key]);
+
+            if (isNaN(v)) {
+                return null;
+            }
+
+            return v;
+        })
     });
 
-    tables.statuts.add({
-        code: sc,
-        nom: ds(data.contrat_etab, "Contrat inconnu")
-    });
+    // On ne rajoute que les données définitives de la dernière session
+    if (session !== LastSession) {
+        return;
+    }
 
-    tables.regions.add({
-        code: rc,
-        nom: ds(data.region_etab_aff, "Région inconnue")
-    })
+    // On gère les noms de filières redondant possédant un chemin différent
+    // Pour cela on vérifie que le parent potentiellement écrasé est correct
+    let f1 = tables.filiere1.findFirst((v) => v.nom === data.Fili);
+    let fc1 = d(f1?.code, tables.filiere1.size());
 
-    tables.academies.add({
-        code: ac,
-        nom: ds(data.acad_mies, "Académie inconnue")
-    });
+    let f2 = tables.filiere2.findFirst((v) =>  v.nom === data.form_lib_voe_acc && v.parent === fc1);
+    let fc2 = d(f2?.code, tables.filiere2.size());
+
+    let f3 = tables.filiere3.findFirst((v) => v.nom === data.fil_lib_voe_acc && v.parent === fc2);
+    let fc3 = d(f3?.code, tables.filiere3.size());
 
     tables.filiere1.add({
         code: fc1,
@@ -80,6 +97,37 @@ const callback2025_2024_2023_2022 = (data: LigneCSV, session: number) => {
         slug: slugify(ds(data.fil_lib_voe_acc, "Aucune filière renseignée").toLowerCase())
     });
 
+    // Départements, régions, académies et statuts
+    const nomRegion = ds(data.region_etab_aff, "Région inconnue");
+    const nomDepartement = ds(data.dep_lib, "Département inconnu");
+    const nomStatut = ds(data.contrat_etab, "Contrat inconnu");
+    const nomAcademie = ds(data.acad_mies, "Académie inconnue");
+
+    const sc = tables.statuts.code(nomStatut, "code");
+    const rc = tables.regions.code(nomRegion, "code");
+    const ac = tables.academies.code(nomAcademie, "code");
+
+    tables.departements.add({
+        code: data.dep,
+        nom: nomDepartement
+    });
+
+    tables.statuts.add({
+        code: sc,
+        nom: nomStatut
+    });
+
+    tables.regions.add({
+        code: rc,
+        nom: nomRegion
+    })
+
+    tables.academies.add({
+        code: ac,
+        nom: nomAcademie
+    });
+
+    // Établissements et formations
     const [lat, lng] = ds(data.G_olocalisation_des_formations, ",").split(',');
 
     tables.etablissements.add({
@@ -161,41 +209,61 @@ const callback2025_2024_2023_2022 = (data: LigneCSV, session: number) => {
         recherche: [data.cod_uai, data.LIB_COMP_VOE_INS, data.Fili, data.form_lib_voe_acc, data.fil_lib_voe_acc, data.G_EA_LIB_VX, data.ville_etab, data.acad_mies, data.region_etab_aff, data.dep_lib].filter((i) => !!i).join(' ').normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase()
     });
 
-    stats.push({
-        session,
-        formationId: parseInt(data.cod_aff_form ?? 0),
-
-        stats: IndiceTrie.map((key: string) => {
-            // @ts-expect-error
-            const v = parseFloat(data[key]);
-
-            if (isNaN(v)) {
-                return null;
-            }
-
-            return v;
-        })
-    });
+    
 };
 
-
-log('debug', 'Données 2022');
-await parseCSV(2022, callback2025_2024_2023_2022);
-
-log('debug', 'Données 2023');
-await parseCSV(2023, callback2025_2024_2023_2022);
-
-log('debug', 'Données 2024');
-await parseCSV(2024, callback2025_2024_2023_2022);
-
-// On met à jour quelques données pour n'avoir que les dernières
-tables.etablissements.data.forEach((v) => {
-    v.formationsCount = 0;
-});
 
 log('debug', 'Données 2025');
 await parseCSV(2025, callback2025_2024_2023_2022);
 
+log('debug', 'Données 2024');
+await parseCSV(2024, callback2025_2024_2023_2022);
+
+log('debug', 'Données 2023');
+await parseCSV(2023, callback2025_2024_2023_2022);
+
+log('debug', 'Données 2022');
+await parseCSV(2022, callback2025_2024_2023_2022);
+
+
+// const testUnique = (it: any) => {
+//     const arr = Array(it).map((i) => i.code);
+
+//     const reduced = [...new Set(arr)];
+
+//     log('info', 'UNIQUE', reduced.length === arr.length);
+// };
+
+// testUnique(tables.filiere1.data.values());
+// testUnique(tables.filiere2.data.values());
+// testUnique(tables.filiere3.data.values());
+
+// const testParent = (parent: Intermediary<Filiere1 | Filiere2>, child: Intermediary<Filiere2 | Filiere3>) => {
+//     let ok = true;
+
+//     for (const v of child.data.values()) {
+//         let exists = false;
+
+//         parent.data.forEach((k) => {
+//             if (k.code === v.parent) {
+//                 exists = true;
+//             }
+//         });
+
+//         ok = ok && exists;
+//     }
+
+//     log('info', 'EXISTS', ok);
+// }
+
+// testParent(tables.filiere1, tables.filiere2);
+// testParent(tables.filiere2, tables.filiere3);
+
+// for (const v of tables.filiere2.data.values()) {
+//     if (v.code === 53) {
+//         log('info', v.nom, v);
+//     }
+// }
 
 log('debug', 'Sauvegarde locale');
 await tables.departements.save("./src/lib/data/departements.json", "code");
@@ -237,7 +305,7 @@ await tables.filiere3.chunk(1000, (data) => db.insert(filiere3).values(data).onC
     }
 }))
 
-log('debug', 'Filières insérées');
+log('debug', ' - Filières insérées');
 
 
 // On insère les départements
@@ -248,7 +316,7 @@ await tables.departements.chunk(1000, (data) => db.insert(departements).values(d
     }
 }));
 
-log('debug', 'Départements insérés');
+log('debug', ' - Départements insérés');
 
 // On insère les statuts
 await tables.statuts.chunk(1000, (data) => db.insert(statuts).values(data).onConflictDoUpdate({
@@ -258,7 +326,7 @@ await tables.statuts.chunk(1000, (data) => db.insert(statuts).values(data).onCon
     }
 }));
 
-log('debug', 'Status insérés');
+log('debug', ' - Status insérés');
 
 // On insère les régions
 await tables.regions.chunk(1000, (data) => db.insert(regions).values(data).onConflictDoUpdate({
@@ -268,7 +336,7 @@ await tables.regions.chunk(1000, (data) => db.insert(regions).values(data).onCon
     }
 }));
 
-log('debug', 'Régions insérées');
+log('debug', ' - Régions insérées');
 
 // On insère les académies
 await tables.academies.chunk(1000, (data) => db.insert(academies).values(data).onConflictDoUpdate({
@@ -278,7 +346,7 @@ await tables.academies.chunk(1000, (data) => db.insert(academies).values(data).o
     }
 }));
 
-log('debug', 'Académies insérées');
+log('debug', ' - Académies insérées');
 
 // On insère les établissements
 await tables.etablissements.chunk(500, (data) => db.insert(etablissements).values(data).onConflictDoUpdate({
@@ -296,9 +364,7 @@ await tables.etablissements.chunk(500, (data) => db.insert(etablissements).value
     }
 }));
 
-log('debug', 'Établissements insérés');
-
-throw Error("stop");
+log('debug', ' - Établissements insérés');
 
 // On insère les formations
 await tables.formations.chunk(500, (data) => db.insert(formations).values(data).onConflictDoUpdate({
@@ -329,7 +395,7 @@ await tables.formations.chunk(500, (data) => db.insert(formations).values(data).
     }
 }));
 
-log('debug', 'Formations insérées');
+log('debug', ' - Formations insérées');
 
 // On insère les statistiques
 await chunk(stats, 500, (data) => db.insert(statistiques).values(data).onConflictDoUpdate({
@@ -339,4 +405,4 @@ await chunk(stats, 500, (data) => db.insert(statistiques).values(data).onConflic
     }
 }));
 
-log('debug', 'Statistiques insérées');
+log('debug', ' - Statistiques insérées');

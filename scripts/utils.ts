@@ -72,6 +72,13 @@ export class Intermediary<T> {
         return this.data.size;
     }
 
+    findFirst(fn: (item: T) => boolean) {
+        for (const v of this.data.values()) {
+            if (fn(v)) return v;
+        }
+        return;
+    }
+
     async save(path: string, key: any) {
         const obj = {};
 
